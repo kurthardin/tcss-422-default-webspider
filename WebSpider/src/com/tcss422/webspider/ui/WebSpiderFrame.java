@@ -37,7 +37,7 @@ public final class WebSpiderFrame extends JFrame implements Reporter {
   /**
    * The shopping cart used by this GUI.
    */
-  private final SpiderController my_spider;
+  private SpiderController my_spider;
   
   private JPanel my_report_panel;
 
@@ -90,7 +90,6 @@ public final class WebSpiderFrame extends JFrame implements Reporter {
     // create frame and report panel
     super("TCSS 422 Spring 2012 - Web Spider");
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    my_spider = new SpiderController();
     
     my_page_url = new JLabel("NONE");
     my_page_count = new JLabel("0");
