@@ -14,25 +14,33 @@ import java.util.regex.Pattern;
  */
 public class PageParser implements Runnable {
 	
-	private final SpiderController myController;
-	private final Page myPage;
+	/**
+	 * The main controller for the web spider. 
+	 */
+	private final SpiderController my_controller;
+	
+	/**
+	 * The {@link Page} to parse.
+	 */
+	private final Page my_page;
 	
 	/**
 	 * Creates a new page parser with the specified {@link Page}. 
 	 * @param aPage the page to parse
 	 */
 	public PageParser(final Page aPage, final SpiderController aController) {
-		myController = aController;
-		myPage = aPage;
+		my_controller = aController;
+		my_page = aPage;
 	}
 	
 	/**
-	 * {@inheritDoc}
+	 * Parses the associated {@link Page} for words and links.
 	 */
 	@Override
 	public void run() {
 		Pattern ptrn = Pattern.compile("a href=\\'\\S*|\\w*");
-		Matcher matcher = ptrn.matcher(myPage.content);
+		Matcher matcher = ptrn.matcher(my_page.my_content);
+		my_page.my_parse_start = System.nanoTime();
 		while (matcher.find()) {
 			String match = matcher.group();
 			if (match.length() > 0) {
@@ -45,7 +53,7 @@ public class PageParser implements Runnable {
 					
 					try {
 						URL url = new URL(urlStr);
-						myPage.links.add(url);
+						my_page.my_links.add(url);
 					} catch (MalformedURLException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -55,12 +63,18 @@ public class PageParser implements Runnable {
 				}
 			}
 		}
+		my_page.my_parse_stop = System.nanoTime();
 	}
 	
-	private void processWord(final String aWord) {
-		int keywordIndex = myController.getKeywords().indexOf(aWord.toLowerCase());
+	/**
+	 * Checks each word found by the parser against the list of keywords incrementing any counts appropriately.
+	 * @param a_word the word to check
+	 */
+	private void processWord(final String a_word) {
+		my_page.my_word_count++;
+		int keywordIndex = my_controller.getKeywords().indexOf(a_word.toLowerCase());
 		if (keywordIndex > -1) {
-			myPage.keywordCounts[keywordIndex] += 1;
+			my_page.my_keyword_counts[keywordIndex] += 1;
 		}
 	}
 

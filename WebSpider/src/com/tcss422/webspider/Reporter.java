@@ -2,6 +2,10 @@ package com.tcss422.webspider;
 
 import java.net.URL;
 
+/**
+ * Interface for updating the UI.
+ * @author Kurt Hardin
+ */
 public interface Reporter {
 	void setPageURL(URL url);
 	void setPagesRetrieved(int val);
