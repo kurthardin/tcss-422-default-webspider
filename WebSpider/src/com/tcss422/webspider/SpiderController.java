@@ -63,6 +63,7 @@ public class SpiderController {
 				TimeUnit.MILLISECONDS, 
 				new LinkedBlockingQueue<Runnable>()
 				);
+		my_url_pool.allowCoreThreadTimeOut(true);
 		my_page_pool = new ThreadPoolExecutor(
 				DEFAULT_THREADS_PER_POOL, 
 				DEFAULT_THREADS_PER_POOL, 
@@ -70,6 +71,7 @@ public class SpiderController {
 				TimeUnit.MILLISECONDS, 
 				new LinkedBlockingQueue<Runnable>()
 				);
+		my_page_pool.allowCoreThreadTimeOut(true);
 		submitUrl(my_base_url);
 	}
 	
