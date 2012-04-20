@@ -123,8 +123,10 @@ public final class WebSpiderFrame extends JFrame implements Reporter {
     labelsPanel.add(new JLabel("Pages retrieved:"));
     labelsPanel.add(new JLabel("Average words per page:"));
     labelsPanel.add(new JLabel("Average URLs per page:"));
-    for (String text : my_spider.getKeywords()) {
-    	labelsPanel.add(new JLabel("   " + text));
+    if (my_spider != null) {
+    	for (String text : my_spider.getKeywords()) {
+    		labelsPanel.add(new JLabel("   " + text));
+    	}
     }
     labelsPanel.add(new JLabel("Page limit:"));
     labelsPanel.add(new JLabel("Average parse time per page:"));
