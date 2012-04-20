@@ -3,6 +3,8 @@ package com.tcss422.webspider;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import com.tcss422.webspider.ui.WebSpiderFrame;
+
 public class PageParserTest {
 	
 	/**
@@ -27,7 +29,7 @@ public class PageParserTest {
 		if (test_url != null) {
 			Page test_page = new Page(test_url);
 			test_page.my_content = "<html>\n<head>\n<title>\nJava Practices -> Parse text\n</title>\n<link rel=\"stylesheet\" type=\"text/css\" href=\"../stylesheet8.css\" media=\"all\">\n<link rel=\"shortcut icon\" href='/images/favicon.ico' type=\"image/vnd.microsoft.icon\">\n<meta name=\"description\" content=\"Concise presentations of java programming practices, tasks, and conventions, amply illustrated with syntax highlighted code examples.\">\n<a href=\"HomeAction.do\">Home</a>\n<a href='./home/HomeAction.do' title='Table of Contents'>Home</a>\n<a href='../../home/HomeAction.do' title='Table of Contents'>Home</a>\n<a href='../home/HomeAction.do' title='Table of Contents'>Home</a>\n<a href='/home/HomeAction.do' title='Table of Contents'>Home</a> |\n<div class='menu-bar'>";
-			SpiderController ctrl = new SpiderController(test_url);
+			WebSpiderController ctrl = new WebSpiderController(test_url, WebSpiderFrame.MAX_PAGE_LIMIT);
 			ctrl.addKeyword("the");
 			ctrl.addKeyword("a");
 			ctrl.addKeyword("title");

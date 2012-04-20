@@ -10,14 +10,13 @@ import java.util.regex.Pattern;
 
 /**
  * @author Kurt Hardin
- *
  */
 public class PageParser implements Runnable {
 	
 	/**
 	 * The main controller for the web spider. 
 	 */
-	private final SpiderController my_controller;
+	private final WebSpiderController my_controller;
 	
 	/**
 	 * The {@link Page} to parse.
@@ -26,11 +25,11 @@ public class PageParser implements Runnable {
 	
 	/**
 	 * Creates a new page parser with the specified {@link Page}. 
-	 * @param aPage the page to parse
+	 * @param a_page the page to parse
 	 */
-	public PageParser(final Page aPage, final SpiderController aController) {
-		my_controller = aController;
-		my_page = aPage;
+	public PageParser(final Page a_page, final WebSpiderController a_controller) {
+		my_controller = a_controller;
+		my_page = a_page;
 	}
 	
 	/**

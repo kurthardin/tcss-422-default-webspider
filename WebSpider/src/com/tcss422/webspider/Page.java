@@ -47,7 +47,7 @@ public class Page {
 	 */
 	public Page(final URL a_url) {
 		my_address = a_url;
-		my_keyword_counts = new int [SpiderController.MAX_KEYWORDS];
+		my_keyword_counts = new int [WebSpiderController.MAX_KEYWORDS];
 		for (int i = 0; i < my_keyword_counts.length; i++) {
 			my_keyword_counts[i] = 0;
 		}

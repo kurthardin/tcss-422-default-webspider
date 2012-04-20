@@ -14,7 +14,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import com.tcss422.webspider.Reporter;
-import com.tcss422.webspider.SpiderController;
+import com.tcss422.webspider.WebSpiderController;
 
 /**
  * WebSpiderFrame provides the user interface for the web spider program.
@@ -32,12 +32,12 @@ public final class WebSpiderFrame extends JFrame implements Reporter {
   /**
    * The absolute maximum number of pages to retrieve.
    */
-  private static final int MAX_PAGE_LIMIT = 10000;
+  public static final int MAX_PAGE_LIMIT = 10000;
 
   /**
    * The shopping cart used by this GUI.
    */
-  private SpiderController my_spider;
+  private WebSpiderController my_spider;
   
   private JPanel my_report_panel;
 
