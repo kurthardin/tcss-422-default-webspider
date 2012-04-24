@@ -42,7 +42,7 @@ public class PageParser implements Runnable {
 		my_page.my_parse_start = System.nanoTime();
 		while (matcher.find()) {
 			String match = matcher.group();
-			System.out.println(match);
+//			System.out.println(match);
 
 			if (match.startsWith("a href")) {									// Found a link
 				String url_str = match.substring(8, match.length() - 1);
@@ -68,15 +68,14 @@ public class PageParser implements Runnable {
 						url_str = url_str_prefix + "/" + url_str;
 					}
 
-					System.out.println("   url: " + url_str);
+//					System.out.println("   url: " + url_str);
 					if (!url_str.startsWith("http://questioneverything.typepad.com/")) {
 						try {
 							URL url = new URL(url_str);
 							my_page.my_links.add(url);
 							my_controller.submitUrl(url);
 						} catch (MalformedURLException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
+//							e.printStackTrace();
 						}
 					}
 				}

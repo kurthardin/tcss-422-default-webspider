@@ -40,7 +40,7 @@ public class PageRetriever implements Runnable {
 			my_page.my_content = buffer.toString();
 			my_controller.submitPage(my_page);
 		} catch (IOException e) {
-			e.printStackTrace();
+//			e.printStackTrace();
 		}
 
 	}
