@@ -46,34 +46,39 @@ public class PageParser implements Runnable {
 
 			if (match.startsWith("a href")) {									// Found a link
 				String url_str = match.substring(8, match.length() - 1);
+				
+				if (url_str.endsWith("html") || url_str.endsWith("htm") || 
+						url_str.endsWith("txt")) {
+					if (!url_str.startsWith("http://")) {							// Fix url for local links 
+						String url_str_prefix = my_page.my_address.toString();
+						url_str_prefix = url_str_prefix.substring(
+								0, url_str_prefix.lastIndexOf("/"));
 
-				if (!url_str.startsWith("http://")) {							// Fix url for local links 
-					String url_str_prefix = my_page.my_address.toString();
-					url_str_prefix = url_str_prefix.substring(
-							0, url_str_prefix.lastIndexOf("/"));
+						if (url_str.startsWith("./")) {
+							url_str = url_str.substring(2);
+						} else if (url_str.startsWith("/")) {
+							url_str = url_str.substring(1);
+						} else {
+							while(url_str.startsWith("../")) {
+								url_str = url_str.substring(3);
+								url_str_prefix = url_str_prefix.substring(
+										0, url_str_prefix.lastIndexOf("/"));
+							}
+						}
+						url_str = url_str_prefix + "/" + url_str;
+					}
 
-					if (url_str.startsWith("./")) {
-						url_str = url_str.substring(2);
-					} else if (url_str.startsWith("/")) {
-						url_str = url_str.substring(1);
-					} else {
-						while(url_str.startsWith("../")) {
-							url_str = url_str.substring(3);
-							url_str_prefix = url_str_prefix.substring(
-									0, url_str_prefix.lastIndexOf("/"));
+					System.out.println("   url: " + url_str);
+					if (!url_str.startsWith("http://questioneverything.typepad.com/")) {
+						try {
+							URL url = new URL(url_str);
+							my_page.my_links.add(url);
+							my_controller.submitUrl(url);
+						} catch (MalformedURLException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
 						}
 					}
-					url_str = url_str_prefix + "/" + url_str;
-				}
-
-				System.out.println("   url: " + url_str);
-				try {
-					URL url = new URL(url_str);
-					my_page.my_links.add(url);
-					my_controller.submitUrl(url);
-				} catch (MalformedURLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
 				}
 
 			} else {															// Found a word
