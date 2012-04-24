@@ -1,6 +1,5 @@
 package com.tcss422.webspider;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
