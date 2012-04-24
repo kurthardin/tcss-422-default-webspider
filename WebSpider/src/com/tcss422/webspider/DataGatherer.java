@@ -50,6 +50,7 @@ public class DataGatherer {
 		for (int i = 0; i < my_total_keyword_counts.length; i++) {
 			my_reporter.setKeywordAvgHitsPerPage(i, my_total_keyword_counts[i] / my_pages_retrieved);
 		}
+		my_reporter.refresh();
 	}
 	
 }

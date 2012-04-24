@@ -6,6 +6,7 @@ package com.tcss422.webspider.ui;
  */
 
 import java.awt.GridLayout;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
@@ -35,7 +36,7 @@ public final class WebSpiderFrame extends JFrame implements Reporter {
   public static final int MAX_PAGE_LIMIT = 10000;
 
   /**
-   * The shopping cart used by this GUI.
+   * The controller used by this GUI.
    */
   private WebSpiderController my_spider;
   
@@ -107,6 +108,13 @@ public final class WebSpiderFrame extends JFrame implements Reporter {
     // adjust size to just fit
     pack();
     setVisible(true);
+    
+    try {
+		my_spider = new WebSpiderController(new URL("http://faculty.washington.edu/gmobus/index.html"), 5000);
+	} catch (MalformedURLException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
   }
   
   /**
@@ -191,6 +199,11 @@ public final class WebSpiderFrame extends JFrame implements Reporter {
   @Override
   public void setTotalRunningTime(long the_val) {
 	  my_total_runtime.setText(String.valueOf(the_val));
+  }
+  
+  @Override
+  public void refresh() {
+	  invalidate();
   }
 
 }

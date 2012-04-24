@@ -15,4 +15,5 @@ public interface Reporter {
 	void setPageLimit(int val);
 	void setAvgParseTimePerPage(long val);
 	void setTotalRunningTime(long val);
+	void refresh();
 }
