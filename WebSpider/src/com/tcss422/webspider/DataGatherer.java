@@ -52,6 +52,7 @@ public class DataGatherer {
 		my_reporter.setTotalRunningTime(my_total_running_time / 1000);
 		for (int i = 0; i < my_controller.getKeywords().size(); i++) {
 			my_reporter.setKeywordAvgHitsPerPage(i, my_total_keyword_counts[i] / my_pages_retrieved);
+			my_reporter.setKeywordTotalHitsPerPage(i, my_total_keyword_counts[i]);
 		}
 		my_reporter.refresh();
 	}

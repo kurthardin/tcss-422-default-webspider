@@ -5,11 +5,13 @@ package com.tcss422.webspider.ui;
  * Author: Kurt Hardin
  */
 
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
+import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -34,6 +36,9 @@ public final class WebSpiderFrame extends JFrame implements Reporter {
    * The absolute maximum number of pages to retrieve.
    */
   public static final int MAX_PAGE_LIMIT = 10000;
+  
+  public static final int MINIMUM_COMPONENT_WIDTH = 1024;
+  public static final int MINIMUM_COMPONENT_HEIGHT = 512;
 
   /**
    * The controller used by this GUI.
@@ -68,6 +73,11 @@ public final class WebSpiderFrame extends JFrame implements Reporter {
   private final ArrayList<JLabel> my_keywords_avg_hits_per_page;
 
   /**
+   * The text fields used to display the average number of hits per page for each keyword.
+   */
+  private final ArrayList<JLabel> my_keywords_total_hits_per_page;
+
+  /**
    * The text field used to display the maximum number of pages to retrieve.
    */
   private final JLabel my_page_limit;
@@ -92,6 +102,17 @@ public final class WebSpiderFrame extends JFrame implements Reporter {
     super("TCSS 422 Spring 2012 - Web Spider");
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     
+    setMinimumSize(new Dimension(MINIMUM_COMPONENT_WIDTH, MINIMUM_COMPONENT_HEIGHT));
+    
+    try {
+		my_spider = new WebSpiderController(new URL("http://faculty.washington.edu/gmobus/index.html"), 5000, this);
+		my_spider.addKeyword("the");
+		my_spider.addKeyword("computer");
+	} catch (MalformedURLException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+    
     my_page_url = new JLabel("NONE");
     my_page_count = new JLabel("0");
     my_avg_words_per_page = new JLabel("0.0");
@@ -100,21 +121,15 @@ public final class WebSpiderFrame extends JFrame implements Reporter {
     my_avg_parse_time_per_page = new JLabel("0.0 ms");
     my_total_runtime = new JLabel("0.0 s");
     
-    my_keywords_avg_hits_per_page = new ArrayList<JLabel>(10);
+    my_keywords_avg_hits_per_page = new ArrayList<JLabel>();
+    my_keywords_total_hits_per_page = new ArrayList<JLabel>();
     
     my_report_panel = makeReportPanel();
-    add(my_report_panel, "North");
+    add(my_report_panel, "West");
     
     // adjust size to just fit
     pack();
     setVisible(true);
-    
-    try {
-		my_spider = new WebSpiderController(new URL("http://faculty.washington.edu/gmobus/index.html"), 5000, this);
-	} catch (MalformedURLException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
   }
   
   /**
@@ -126,11 +141,12 @@ public final class WebSpiderFrame extends JFrame implements Reporter {
     // create the report panel, and its label
     final JPanel p = new JPanel();
     
-    final JPanel labelsPanel = new JPanel(new GridLayout(my_keywords_avg_hits_per_page.size() + 7, 1));
+    final JPanel labelsPanel = new JPanel(new GridLayout(my_spider.getKeywords().size() + 8, 1));
     labelsPanel.add(new JLabel("Parsed URL:"));
     labelsPanel.add(new JLabel("Pages retrieved:"));
     labelsPanel.add(new JLabel("Average words per page:"));
     labelsPanel.add(new JLabel("Average URLs per page:"));
+    labelsPanel.add(new JLabel("Keywords:"));
     if (my_spider != null) {
     	for (String text : my_spider.getKeywords()) {
     		labelsPanel.add(new JLabel("   " + text));
@@ -140,13 +156,25 @@ public final class WebSpiderFrame extends JFrame implements Reporter {
     labelsPanel.add(new JLabel("Average parse time per page:"));
     labelsPanel.add(new JLabel("Total running time:")); 
     
-    final JPanel valuesPanel = new JPanel(new GridLayout(my_keywords_avg_hits_per_page.size() + 7, 1));
+    final JPanel valuesPanel = new JPanel(new GridLayout(my_spider.getKeywords().size() + 8, 1));
     valuesPanel.add(my_page_url);
     valuesPanel.add(my_page_count);
     valuesPanel.add(my_avg_words_per_page);
     valuesPanel.add(my_avg_urls_per_page);
-    for (JLabel label : my_keywords_avg_hits_per_page) {
-    	valuesPanel.add(label);
+    JPanel labelPanel = new JPanel();
+    labelPanel.setLayout(new BoxLayout(labelPanel, BoxLayout.X_AXIS));
+    labelPanel.add(new JLabel("Avg hits per page     "));
+    labelPanel.add(new JLabel("Total hits"));
+    valuesPanel.add(labelPanel);
+    for (int i = 0; i < my_spider.getKeywords().size(); i++) {
+        final JPanel keywordValuesPanel = new JPanel();
+        keywordValuesPanel.setLayout(new BoxLayout(keywordValuesPanel, BoxLayout.X_AXIS));
+    	my_keywords_avg_hits_per_page.add(new JLabel("0.0"));
+    	keywordValuesPanel.add(my_keywords_avg_hits_per_page.get(i));
+    	keywordValuesPanel.add(new JLabel("                             "));
+    	my_keywords_total_hits_per_page.add(new JLabel("0.0"));
+    	keywordValuesPanel.add(my_keywords_total_hits_per_page.get(i));
+        valuesPanel.add(keywordValuesPanel);
     }
     valuesPanel.add(my_page_limit);
     valuesPanel.add(my_avg_parse_time_per_page);
@@ -154,7 +182,7 @@ public final class WebSpiderFrame extends JFrame implements Reporter {
     
     p.add(labelsPanel);
     p.add(valuesPanel);
-    
+
     return p;
   }
   
@@ -187,6 +215,14 @@ public final class WebSpiderFrame extends JFrame implements Reporter {
   }
 
   @Override
+  public void setKeywordTotalHitsPerPage(int the_keywordId, long the_val) {
+	  JLabel label = my_keywords_total_hits_per_page.get(the_keywordId);
+	  if (label != null) {
+		  label.setText(String.valueOf(the_val));
+	  }
+  }
+
+  @Override
   public void setPageLimit(int the_val) {
 	  my_page_limit.setText(String.valueOf(the_val));
   }
@@ -203,7 +239,6 @@ public final class WebSpiderFrame extends JFrame implements Reporter {
   
   @Override
   public void refresh() {
-	  pack();
 	  repaint();
   }
 
