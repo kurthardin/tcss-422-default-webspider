@@ -1,5 +1,6 @@
 package com.tcss422.webspider;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -36,11 +37,10 @@ public class PageRetriever implements Runnable {
 			StringBuffer buffer = new StringBuffer();
 			while ((ptr = is.read()) != -1) {
 			    buffer.append((char)ptr);
+			}
 			my_page.my_content = buffer.toString();
 			my_controller.submitPage(my_page);
-			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
