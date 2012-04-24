@@ -86,6 +86,8 @@ public class PageParser implements Runnable {
 			}
 		}
 		my_page.my_parse_stop = System.nanoTime();
+		
+		my_controller.getGatherer().processPage(my_page);
 	}
 	
 	/**

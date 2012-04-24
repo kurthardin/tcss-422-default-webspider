@@ -54,6 +54,8 @@ public class WebSpiderController {
 	 */
 	private final ThreadPoolExecutor my_page_pool;
 	
+	private final DataGatherer my_gatherer;
+	
 	/**
 	 * The start time for this WebSpider.
 	 */
@@ -69,7 +71,7 @@ public class WebSpiderController {
 	 * @param the_base_url the {@link URL} from which to start crawling
 	 * @param the_page_limit the maximum number of {@link Page}s to retrieve
 	 */
-	public WebSpiderController(final URL the_base_url, final int the_page_limit) {
+	public WebSpiderController(final URL the_base_url, final int the_page_limit, final Reporter the_reporter) {
 		my_base_url = the_base_url;
 		my_page_limit = the_page_limit;
 		my_keywords = new ArrayList<String>(10);
@@ -91,6 +93,7 @@ public class WebSpiderController {
 		my_page_pool.allowCoreThreadTimeOut(true);
 		
 		my_start_time = System.nanoTime();
+		my_gatherer = new DataGatherer(the_reporter, this);
 		submitUrl(my_base_url);
 	}
 	
@@ -151,6 +154,10 @@ public class WebSpiderController {
 	 */
 	public long getStartTime() {
 		return my_start_time;
+	}
+	
+	public DataGatherer getGatherer() {
+		return my_gatherer;
 	}
 	
 }

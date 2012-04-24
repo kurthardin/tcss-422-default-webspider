@@ -3,6 +3,8 @@
  */
 package com.tcss422.webspider;
 
+import java.net.URL;
+
 /**
  * 
  * @author Kurt Hardin
@@ -38,16 +40,17 @@ public class DataGatherer {
 				i < a_page.my_keyword_counts.length; i++) {
 			my_total_keyword_counts[i] += a_page.my_keyword_counts[i];
 		}
-		updateReporter();
+		updateReporter(a_page.my_address);
 	}
 	
-	private void updateReporter() {
+	private void updateReporter(final URL a_url) {
+		my_reporter.setPageURL(a_url);
 		my_reporter.setPagesRetrieved(my_pages_retrieved);
 		my_reporter.setAvgWordsPerPage(my_total_words / my_pages_retrieved);
 		my_reporter.setAvgURLsPerPage(my_total_urls / my_pages_retrieved);
-		my_reporter.setAvgParseTimePerPage(my_total_parse_time / my_pages_retrieved);
-		my_reporter.setTotalRunningTime(my_total_running_time);
-		for (int i = 0; i < my_total_keyword_counts.length; i++) {
+		my_reporter.setAvgParseTimePerPage((my_total_parse_time / 1000) / my_pages_retrieved);
+		my_reporter.setTotalRunningTime(my_total_running_time / 1000);
+		for (int i = 0; i < my_controller.getKeywords().size(); i++) {
 			my_reporter.setKeywordAvgHitsPerPage(i, my_total_keyword_counts[i] / my_pages_retrieved);
 		}
 		my_reporter.refresh();

@@ -110,7 +110,7 @@ public final class WebSpiderFrame extends JFrame implements Reporter {
     setVisible(true);
     
     try {
-		my_spider = new WebSpiderController(new URL("http://faculty.washington.edu/gmobus/index.html"), 5000);
+		my_spider = new WebSpiderController(new URL("http://faculty.washington.edu/gmobus/index.html"), 5000, this);
 	} catch (MalformedURLException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
@@ -203,7 +203,8 @@ public final class WebSpiderFrame extends JFrame implements Reporter {
   
   @Override
   public void refresh() {
-	  invalidate();
+	  pack();
+	  repaint();
   }
 
 }
