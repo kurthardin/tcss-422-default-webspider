@@ -70,6 +70,7 @@ public class PageParser implements Runnable {
 				try {
 					URL url = new URL(url_str);
 					my_page.my_links.add(url);
+					my_controller.submitUrl(url);
 				} catch (MalformedURLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
