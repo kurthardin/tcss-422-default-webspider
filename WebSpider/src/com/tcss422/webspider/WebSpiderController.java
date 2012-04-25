@@ -29,6 +29,8 @@ public class WebSpiderController {
 	 */
 	public static final long EXTRA_THREAD_STAY_ALIVE_MILLIS = 500;
 	
+	private final boolean my_is_multithreaded;
+	
 	/**
 	 * The {@link URL} to start crawling from.
 	 */
@@ -65,27 +67,36 @@ public class WebSpiderController {
 	 * The number of {@link URL}s that have been submitted for retrieval.
 	 */
 	private int my_submitted_url_count = 0;
+
+	public WebSpiderController(final URL the_base_url, final int the_page_limit, final Reporter the_reporter) {
+		this(the_base_url, the_page_limit, the_reporter, true);
+	}
 	
 	/**
 	 * Creates a new web spider starting from the specified {@link URL}.
 	 * @param the_base_url the {@link URL} from which to start crawling
 	 * @param the_page_limit the maximum number of {@link Page}s to retrieve
 	 */
-	public WebSpiderController(final URL the_base_url, final int the_page_limit, final Reporter the_reporter) {
+	public WebSpiderController(final URL the_base_url, final int the_page_limit, final Reporter the_reporter, final boolean is_multithreaded) {
 		my_base_url = the_base_url;
+		my_is_multithreaded = is_multithreaded;
 		my_page_limit = the_page_limit;
 		my_keywords = new ArrayList<String>(10);
+		int numThreads = 1;
+		if (my_is_multithreaded){
+			numThreads = DEFAULT_THREADS_PER_POOL;
+		}
 		my_url_pool = new ThreadPoolExecutor(
-				DEFAULT_THREADS_PER_POOL, 
-				DEFAULT_THREADS_PER_POOL, 
+				numThreads, 
+				numThreads, 
 				EXTRA_THREAD_STAY_ALIVE_MILLIS, 
 				TimeUnit.MILLISECONDS, 
 				new LinkedBlockingQueue<Runnable>()
 				);
 		my_url_pool.allowCoreThreadTimeOut(true);
 		my_page_pool = new ThreadPoolExecutor(
-				DEFAULT_THREADS_PER_POOL, 
-				DEFAULT_THREADS_PER_POOL, 
+				numThreads, 
+				numThreads, 
 				EXTRA_THREAD_STAY_ALIVE_MILLIS, 
 				TimeUnit.MILLISECONDS, 
 				new LinkedBlockingQueue<Runnable>()
@@ -124,7 +135,7 @@ public class WebSpiderController {
 	 */
 	public synchronized void submitUrl(final URL a_url) {
 		if(my_submitted_url_count < my_page_limit) {
-			Runnable the_job = new PageRetriever(a_url, this);
+			Runnable the_job = new PageRetriever(a_url, this, my_is_multithreaded);
 			my_url_pool.execute(the_job);
 			my_submitted_url_count++;
 		}
@@ -135,8 +146,10 @@ public class WebSpiderController {
 	 * @param a_page the {@link Page} to parse
 	 */
 	public synchronized void submitPage(final Page a_page) {
-		Runnable the_job = new PageParser(a_page, this);
-		my_page_pool.execute(the_job);
+		if(my_is_multithreaded) {
+			Runnable the_job = new PageParser(a_page, this);
+			my_page_pool.execute(the_job);
+		}
 	}
 	
 	/**

@@ -11,6 +11,8 @@ public class PageRetriever implements Runnable {
 	 */
 	private final WebSpiderController my_controller;
 	
+	private final boolean my_is_multithreaded;
+	
 	/**
 	 * The url to be retrieved.
 	 */
@@ -22,6 +24,14 @@ public class PageRetriever implements Runnable {
 	private Page my_page;
 	
 	public PageRetriever(final URL a_url, final WebSpiderController a_controller) {
+		my_is_multithreaded = true;
+		my_controller = a_controller;
+		my_url = a_url;
+		my_page = new Page(my_url);
+	}
+	
+	public PageRetriever(final URL a_url, final WebSpiderController a_controller, final boolean is_threaded) {
+		my_is_multithreaded = is_threaded;
 		my_controller = a_controller;
 		my_url = a_url;
 		my_page = new Page(my_url);
@@ -38,7 +48,11 @@ public class PageRetriever implements Runnable {
 			    buffer.append((char)ptr);
 			}
 			my_page.my_content = buffer.toString();
-			my_controller.submitPage(my_page);
+			if (my_is_multithreaded) {
+				my_controller.submitPage(my_page);	
+			} else {
+				(new PageParser(my_page, my_controller)).run();
+			}
 		} catch (IOException e) {
 //			e.printStackTrace();
 		}
