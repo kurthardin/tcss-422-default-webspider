@@ -2,6 +2,7 @@ package com.tcss422.webspider;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.RejectedExecutionException;
@@ -68,6 +69,8 @@ public class WebSpiderController {
 	 * The number of {@link URL}s that have been submitted for retrieval.
 	 */
 	private int my_submitted_url_count = 0;
+	
+	private final HashSet<String> my_visited_url_strs = new HashSet<String>();
 
 	public WebSpiderController(final URL the_base_url, final int the_page_limit, final Reporter the_reporter) {
 		this(the_base_url, the_page_limit, the_reporter, true);
@@ -150,7 +153,8 @@ public class WebSpiderController {
 	 * @param a_url the {@link URL} to retrieve
 	 */
 	public synchronized void submitUrl(final URL a_url) {
-		if(my_submitted_url_count < my_page_limit) {
+		if(my_submitted_url_count < my_page_limit && 
+				my_visited_url_strs.add(a_url.toString())) {
 			Runnable the_job = new PageRetriever(a_url, this, my_is_multithreaded);
 			try {
 				my_url_pool.execute(the_job);
