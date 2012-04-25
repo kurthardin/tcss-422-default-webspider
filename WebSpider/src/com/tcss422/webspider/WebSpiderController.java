@@ -74,11 +74,6 @@ public class WebSpiderController {
 	 */
 	private final long my_start_time;
 	
-	/**
-	 * The number of {@link URL}s that have been submitted for retrieval.
-	 */
-	private int my_submitted_url_count = 0;
-	
 	private final HashSet<String> my_visited_url_strs = new HashSet<String>();
 
 	public WebSpiderController(final URL the_base_url, final int the_page_limit, final Reporter the_reporter) {
