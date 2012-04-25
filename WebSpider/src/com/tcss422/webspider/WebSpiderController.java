@@ -22,7 +22,7 @@ public class WebSpiderController {
 	/**
 	 * The default number of threads per pool
 	 */
-	public static final int DEFAULT_THREADS_PER_POOL = 1;
+	public static final int DEFAULT_THREADS_PER_POOL = 5;
 	
 	/**
 	 * The amount of time in milliseconds that extra threads remain alive when idle. 
