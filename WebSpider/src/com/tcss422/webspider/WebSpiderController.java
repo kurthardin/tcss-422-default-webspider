@@ -1,3 +1,10 @@
+/*
+ * TCSS 422 Spring 2012 - Web Spider
+ * Team: Default
+ * Kurt Hardin
+ * Daniel Bartholomew
+ */
+
 package com.tcss422.webspider;
 
 import java.net.URL;
@@ -13,6 +20,8 @@ import java.util.concurrent.TimeUnit;
  * The main controller for the WebSpider program.  
  * Manages all the thread pools and data collection classes.
  * @author Kurt Hardin
+ * @author Daniel Bartholomew
+ * @version 1.0
  */
 public class WebSpiderController {
 	
@@ -153,12 +162,12 @@ public class WebSpiderController {
 	 * @param a_url the {@link URL} to retrieve
 	 */
 	public synchronized void submitUrl(final URL a_url) {
-		if(my_submitted_url_count < my_page_limit && 
+		if(/*my_submitted_url_count < my_page_limit &&*/ 
 				my_visited_url_strs.add(a_url.toString())) {
 			Runnable the_job = new PageRetriever(a_url, this, my_is_multithreaded);
 			try {
 				my_url_pool.execute(the_job);
-				my_submitted_url_count++;
+				//my_submitted_url_count++;
 			} catch (final RejectedExecutionException e) {
 				// TODO Handle rejected url jobs
 			}
@@ -203,6 +212,13 @@ public class WebSpiderController {
 	public void stop() {
 		my_url_pool.shutdownNow();
 		my_page_pool.shutdownNow();
+	}
+
+	/**
+	 * @return
+	 */
+	public int getPageLimit() {
+		return my_page_limit;
 	}
 	
 }

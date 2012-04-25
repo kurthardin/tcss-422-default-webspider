@@ -1,9 +1,20 @@
+/*
+ * TCSS 422 Spring 2012 - Web Spider
+ * Team: Default
+ * Kurt Hardin
+ * Daniel Bartholomew
+ */
+
 package com.tcss422.webspider;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
+/**
+ * @author Daniel Bartholomew
+ * @version 1.0
+ */
 public class PageRetriever implements Runnable {
 	
 	/**
@@ -53,8 +64,9 @@ public class PageRetriever implements Runnable {
 			} else {
 				(new PageParser(my_page, my_controller)).run();
 			}
+			
 		} catch (IOException e) {
-//			e.printStackTrace();
+			
 		}
 
 	}

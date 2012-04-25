@@ -1,13 +1,17 @@
-/**
- * 
+/*
+ * TCSS 422 Spring 2012 - Web Spider
+ * Team: Default
+ * Kurt Hardin
+ * Daniel Bartholomew
  */
+
 package com.tcss422.webspider;
 
 import java.net.URL;
 
 /**
- * 
  * @author Kurt Hardin
+ * @version 1.0
  */
 public class DataGatherer {
 	
@@ -45,6 +49,10 @@ public class DataGatherer {
 			my_total_keyword_counts[i] += a_page.my_keyword_counts[i];
 		}
 		updateReporter(a_page.my_address);
+		if (my_pages_retrieved >= my_controller.getPageLimit()) {
+			my_controller.stop();
+			my_reporter.finished();
+		}
 	}
 	
 	private void updateReporter(final URL a_url) {

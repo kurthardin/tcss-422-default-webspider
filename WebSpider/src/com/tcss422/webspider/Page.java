@@ -1,9 +1,20 @@
+/*
+ * TCSS 422 Spring 2012 - Web Spider
+ * Team: Default
+ * Kurt Hardin
+ * Daniel Bartholomew
+ */
+
 package com.tcss422.webspider;
 
 import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * @author Daniel Bartholomew
+ * @version 1.0
+ */
 public class Page {
 	
 	/**

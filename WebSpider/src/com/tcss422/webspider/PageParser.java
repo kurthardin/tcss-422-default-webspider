@@ -1,6 +1,10 @@
-/**
- * 
+/*
+ * TCSS 422 Spring 2012 - Web Spider
+ * Team: Default
+ * Kurt Hardin
+ * Daniel Bartholomew
  */
+
 package com.tcss422.webspider;
 
 import java.net.MalformedURLException;
@@ -10,6 +14,7 @@ import java.util.regex.Pattern;
 
 /**
  * @author Kurt Hardin
+ * @version 1.0
  */
 public class PageParser implements Runnable {
 	

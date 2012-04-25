@@ -1,9 +1,11 @@
-package com.tcss422.webspider.ui;
-
 /*
  * TCSS 422 Spring 2012 - Web Spider
- * Author: Kurt Hardin
+ * Team: Default
+ * Kurt Hardin
+ * Daniel Bartholomew
  */
+
+package com.tcss422.webspider.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -35,7 +37,9 @@ import com.tcss422.webspider.ui.KeywordLabel.RemoveKeywordLabelHandler;
 /**
  * WebSpiderFrame provides the user interface for the web spider program.
  * 
+ * Team: Default
  * @author Kurt Hardin
+ * @author Daniel Bartholomew
  * @version 1.0 (Winter 2012)
  */
 public final class WebSpiderFrame extends JFrame implements Reporter, RemoveKeywordLabelHandler {
@@ -158,60 +162,7 @@ public final class WebSpiderFrame extends JFrame implements Reporter, RemoveKeyw
 		my_start_stop_button.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (my_is_running) {
-					if (my_spider != null) {
-						my_spider.stop();
-					}
-					my_page_url.setText(my_previous_base_url_str);
-					my_page_url.setEnabled(true);
-					for(KeywordLabel keywordLabel : my_keyword_labels) {
-						keywordLabel.setEnabled(true);
-					}
-					my_is_multithreaded_checkbox.setEnabled(true);
-					my_max_url_threads_combo_box.setEnabled(true);
-					my_max_page_threads_combo_box.setEnabled(true);
-					my_page_limit_combo_box.setEnabled(true);
-					my_start_stop_button.setText("Start");
-					my_is_running = false;
-					
-				} else {
-					URL baseUrl = null;
-					try {
-						baseUrl = new URL(my_page_url.getText());
-					} catch (MalformedURLException e1) {
-						JOptionPane.showMessageDialog(
-								WebSpiderFrame.this, 
-								"The base URL is invalid: '" + my_page_url.getText() + "'", 
-								"Bad URL!", 
-								JOptionPane.ERROR_MESSAGE);
-					}
-
-					if (baseUrl != null) {
-						my_start_stop_button.setText("Stop");
-						my_page_limit_combo_box.setEnabled(false);
-						my_max_page_threads_combo_box.setEnabled(false);
-						my_max_url_threads_combo_box.setEnabled(false);
-						my_is_multithreaded_checkbox.setEnabled(false);
-						for(KeywordLabel keywordLabel : my_keyword_labels) {
-							keywordLabel.setEnabled(false);
-						}
-						my_page_url.setEnabled(false);
-						my_previous_base_url_str = my_page_url.getText();
-						
-						int pageLimit = Integer.valueOf((String) my_page_limit_combo_box.getSelectedItem());
-						my_spider = new WebSpiderController(
-								baseUrl, pageLimit, WebSpiderFrame.this, my_is_multithreaded_checkbox.isSelected());
-						for (KeywordLabel keyword : my_keyword_labels) {
-							my_spider.addKeyword(keyword.getText());
-						}
-						int maxUrlThreads = Integer.valueOf((String) my_max_url_threads_combo_box.getSelectedItem());
-						my_spider.setNumUrlThreads(maxUrlThreads);
-						int maxPageThreads = Integer.valueOf((String) my_max_page_threads_combo_box.getSelectedItem());
-						my_spider.setNumPageThreads(maxPageThreads);
-						my_spider.start();
-						my_is_running = true;
-					}
-				}
+				toggleControls();
 			}
 		});
 
@@ -368,17 +319,17 @@ public final class WebSpiderFrame extends JFrame implements Reporter, RemoveKeyw
 	}
 
 	@Override
-	public void setAvgWordsPerPage(long the_val) {
+	public void setAvgWordsPerPage(double the_val) {
 		my_avg_words_per_page.setText(String.valueOf(the_val));
 	}
 
 	@Override
-	public void setAvgURLsPerPage(long the_val) {
+	public void setAvgURLsPerPage(double the_val) {
 		my_avg_urls_per_page.setText(String.valueOf(the_val));
 	}
 
 	@Override
-	public void setKeywordAvgHitsPerPage(int the_keywordId, long the_val) {
+	public void setKeywordAvgHitsPerPage(int the_keywordId, double the_val) {
 		JTextField label = my_keywords_avg_hits_per_page.get(the_keywordId);
 		if (label != null) {
 			label.setText(String.valueOf(the_val));
@@ -386,7 +337,7 @@ public final class WebSpiderFrame extends JFrame implements Reporter, RemoveKeyw
 	}
 
 	@Override
-	public void setKeywordTotalHitsPerPage(int the_keywordId, long the_val) {
+	public void setKeywordTotalHitsPerPage(int the_keywordId, double the_val) {
 		JTextField label = my_keywords_total_hits_per_page.get(the_keywordId);
 		if (label != null) {
 			label.setText(String.valueOf(the_val));
@@ -394,12 +345,12 @@ public final class WebSpiderFrame extends JFrame implements Reporter, RemoveKeyw
 	}
 
 	@Override
-	public void setAvgParseTimePerPage(long the_val_nanos) {
+	public void setAvgParseTimePerPage(double the_val_nanos) {
 		my_avg_parse_time_per_page.setText(String.valueOf(the_val_nanos / 1000000) + " ms");
 	}
 
 	@Override
-	public void setTotalRunningTime(long the_val_nanos) {
+	public void setTotalRunningTime(double the_val_nanos) {
 		my_total_runtime.setText(String.valueOf(the_val_nanos / 1000000000) + " s");
 	}
 
@@ -421,6 +372,71 @@ public final class WebSpiderFrame extends JFrame implements Reporter, RemoveKeyw
 			layoutKeywordsPanel();
 			pack();
 			repaint();
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void finished() {
+		toggleControls();
+	}
+	
+	private void toggleControls() {
+		if (my_is_running) {
+			if (my_spider != null) {
+				my_spider.stop();
+			}
+			my_page_url.setText(my_previous_base_url_str);
+			my_page_url.setEnabled(true);
+			for(KeywordLabel keywordLabel : my_keyword_labels) {
+				keywordLabel.setEnabled(true);
+			}
+			my_is_multithreaded_checkbox.setEnabled(true);
+			my_max_url_threads_combo_box.setEnabled(true);
+			my_max_page_threads_combo_box.setEnabled(true);
+			my_page_limit_combo_box.setEnabled(true);
+			my_start_stop_button.setText("Start");
+			my_is_running = false;
+			
+		} else {
+			URL baseUrl = null;
+			try {
+				baseUrl = new URL(my_page_url.getText());
+			} catch (MalformedURLException e1) {
+				JOptionPane.showMessageDialog(
+						WebSpiderFrame.this, 
+						"The base URL is invalid: '" + my_page_url.getText() + "'", 
+						"Bad URL!", 
+						JOptionPane.ERROR_MESSAGE);
+			}
+
+			if (baseUrl != null) {
+				my_start_stop_button.setText("Stop");
+				my_page_limit_combo_box.setEnabled(false);
+				my_max_page_threads_combo_box.setEnabled(false);
+				my_max_url_threads_combo_box.setEnabled(false);
+				my_is_multithreaded_checkbox.setEnabled(false);
+				for(KeywordLabel keywordLabel : my_keyword_labels) {
+					keywordLabel.setEnabled(false);
+				}
+				my_page_url.setEnabled(false);
+				my_previous_base_url_str = my_page_url.getText();
+				
+				int pageLimit = Integer.valueOf((String) my_page_limit_combo_box.getSelectedItem());
+				my_spider = new WebSpiderController(
+						baseUrl, pageLimit, WebSpiderFrame.this, my_is_multithreaded_checkbox.isSelected());
+				for (KeywordLabel keyword : my_keyword_labels) {
+					my_spider.addKeyword(keyword.getText());
+				}
+				int maxUrlThreads = Integer.valueOf((String) my_max_url_threads_combo_box.getSelectedItem());
+				my_spider.setNumUrlThreads(maxUrlThreads);
+				int maxPageThreads = Integer.valueOf((String) my_max_page_threads_combo_box.getSelectedItem());
+				my_spider.setNumPageThreads(maxPageThreads);
+				my_spider.start();
+				my_is_running = true;
+			}
 		}
 	}
 
