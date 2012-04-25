@@ -4,6 +4,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
@@ -105,7 +106,6 @@ public class WebSpiderController {
 		
 		my_start_time = System.nanoTime();
 		my_gatherer = new DataGatherer(the_reporter, this);
-		submitUrl(my_base_url);
 	}
 	
 	/**
@@ -114,7 +114,7 @@ public class WebSpiderController {
 	 * @return true if the word is added, otherwise false
 	 */
 	public boolean addKeyword(final String a_word) {
-		if (my_keywords.size() < 10) {
+		if (my_keywords.size() < 10 && !my_keywords.contains(a_word)) {
 			my_keywords.add(a_word.toLowerCase());
 			return true;
 		}
@@ -130,14 +130,34 @@ public class WebSpiderController {
 	}
 	
 	/**
+	 * Gets the start time for this WebSpider.
+	 * @return the start time for this WebSpider
+	 */
+	public long getStartTime() {
+		return my_start_time;
+	}
+	
+	public DataGatherer getGatherer() {
+		return my_gatherer;
+	}
+	
+	public void start() {
+		submitUrl(my_base_url);;
+	}
+	
+	/**
 	 * Adds a {@link URL} to the queue of {@link URL}s to be retrieved.
 	 * @param a_url the {@link URL} to retrieve
 	 */
 	public synchronized void submitUrl(final URL a_url) {
 		if(my_submitted_url_count < my_page_limit) {
 			Runnable the_job = new PageRetriever(a_url, this, my_is_multithreaded);
-			my_url_pool.execute(the_job);
-			my_submitted_url_count++;
+			try {
+				my_url_pool.execute(the_job);
+				my_submitted_url_count++;
+			} catch (final RejectedExecutionException e) {
+				// TODO Handle rejected url jobs
+			}
 		}
 	}
 	
@@ -148,7 +168,11 @@ public class WebSpiderController {
 	public synchronized void submitPage(final Page a_page) {
 		if(my_is_multithreaded) {
 			Runnable the_job = new PageParser(a_page, this);
-			my_page_pool.execute(the_job);
+			try {
+				my_page_pool.execute(the_job);
+			} catch (final RejectedExecutionException e) {
+				// TODO Handle rejected page jobs.
+			}
 		}
 	}
 	
@@ -157,20 +181,15 @@ public class WebSpiderController {
 	 * @param the_num_threads the number of threads per task
 	 */
 	public void setNumThreadsPerTask(final int the_num_threads) {
-		my_url_pool.setCorePoolSize(the_num_threads);
-		my_page_pool.setCorePoolSize(the_num_threads);
+		if(my_is_multithreaded) {
+			my_url_pool.setCorePoolSize(the_num_threads);
+			my_page_pool.setCorePoolSize(the_num_threads);
+		}
 	}
 	
-	/**
-	 * Gets the start time for this WebSpider.
-	 * @return the start time for this WebSpider
-	 */
-	public long getStartTime() {
-		return my_start_time;
-	}
-	
-	public DataGatherer getGatherer() {
-		return my_gatherer;
+	public void stop() {
+		my_url_pool.shutdownNow();
+		my_page_pool.shutdownNow();
 	}
 	
 }

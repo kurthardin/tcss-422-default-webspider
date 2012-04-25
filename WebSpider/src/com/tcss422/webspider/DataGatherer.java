@@ -30,6 +30,10 @@ public class DataGatherer {
 		}
 	}
 	
+	public synchronized int getPagesRetrieved() {
+		return my_pages_retrieved;
+	}
+	
 	public synchronized void processPage(final Page a_page) {
 		my_pages_retrieved++;
 		my_total_words += a_page.my_word_count;
@@ -48,8 +52,8 @@ public class DataGatherer {
 		my_reporter.setPagesRetrieved(my_pages_retrieved);
 		my_reporter.setAvgWordsPerPage(my_total_words / my_pages_retrieved);
 		my_reporter.setAvgURLsPerPage(my_total_urls / my_pages_retrieved);
-		my_reporter.setAvgParseTimePerPage((my_total_parse_time / 1000) / my_pages_retrieved);
-		my_reporter.setTotalRunningTime(my_total_running_time / 1000);
+		my_reporter.setAvgParseTimePerPage(my_total_parse_time / my_pages_retrieved);
+		my_reporter.setTotalRunningTime(my_total_running_time);
 		for (int i = 0; i < my_controller.getKeywords().size(); i++) {
 			my_reporter.setKeywordAvgHitsPerPage(i, my_total_keyword_counts[i] / my_pages_retrieved);
 			my_reporter.setKeywordTotalHitsPerPage(i, my_total_keyword_counts[i]);

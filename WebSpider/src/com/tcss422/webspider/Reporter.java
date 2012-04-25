@@ -13,7 +13,6 @@ public interface Reporter {
 	void setAvgURLsPerPage(long val);
 	void setKeywordAvgHitsPerPage(int keywordId, long val);
 	void setKeywordTotalHitsPerPage(int the_keywordId, long the_val);
-	void setPageLimit(int val);
 	void setAvgParseTimePerPage(long val);
 	void setTotalRunningTime(long val);
 	void refresh();
