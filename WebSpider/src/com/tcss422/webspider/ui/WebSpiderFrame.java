@@ -51,7 +51,7 @@ public final class WebSpiderFrame extends JFrame implements Reporter, RemoveKeyw
 	public static final int MAX_PAGE_LIMIT = 10000;
 
 	public static final int MINIMUM_COMPONENT_WIDTH = 768;
-	public static final int MINIMUM_COMPONENT_HEIGHT = 50;
+	public static final int MINIMUM_COMPONENT_HEIGHT = 256;
 
 	public static final int URL_TEXT_FIELD_WIDTH = 50;
 
@@ -66,7 +66,8 @@ public final class WebSpiderFrame extends JFrame implements Reporter, RemoveKeyw
 	private WebSpiderController my_spider;
 
 	private final JCheckBox my_is_multithreaded_checkbox;
-	private final JComboBox my_max_threads_combo_box;
+	private final JComboBox my_max_url_threads_combo_box;
+	private final JComboBox my_max_page_threads_combo_box;
 	private final JComboBox my_page_limit_combo_box;
 	private final JButton my_start_stop_button;
 
@@ -147,8 +148,10 @@ public final class WebSpiderFrame extends JFrame implements Reporter, RemoveKeyw
 		
 		my_is_multithreaded_checkbox = new JCheckBox();
 		my_is_multithreaded_checkbox.setSelected(true);
-		my_max_threads_combo_box = new JComboBox(MAX_THREAD_OPTIONS);
-		my_max_threads_combo_box.setSelectedIndex(4);
+		my_max_url_threads_combo_box = new JComboBox(MAX_THREAD_OPTIONS);
+		my_max_url_threads_combo_box.setSelectedIndex(4);
+		my_max_page_threads_combo_box = new JComboBox(MAX_THREAD_OPTIONS);
+		my_max_page_threads_combo_box.setSelectedIndex(4);
 		my_page_limit_combo_box = new JComboBox(PAGE_LIMITS);
 		my_page_limit_combo_box.setSelectedIndex(4);
 		my_start_stop_button = new JButton("Start");
@@ -165,7 +168,8 @@ public final class WebSpiderFrame extends JFrame implements Reporter, RemoveKeyw
 						keywordLabel.setEnabled(true);
 					}
 					my_is_multithreaded_checkbox.setEnabled(true);
-					my_max_threads_combo_box.setEnabled(true);
+					my_max_url_threads_combo_box.setEnabled(true);
+					my_max_page_threads_combo_box.setEnabled(true);
 					my_page_limit_combo_box.setEnabled(true);
 					my_start_stop_button.setText("Start");
 					my_is_running = false;
@@ -185,7 +189,8 @@ public final class WebSpiderFrame extends JFrame implements Reporter, RemoveKeyw
 					if (baseUrl != null) {
 						my_start_stop_button.setText("Stop");
 						my_page_limit_combo_box.setEnabled(false);
-						my_max_threads_combo_box.setEnabled(false);
+						my_max_page_threads_combo_box.setEnabled(false);
+						my_max_url_threads_combo_box.setEnabled(false);
 						my_is_multithreaded_checkbox.setEnabled(false);
 						for(KeywordLabel keywordLabel : my_keyword_labels) {
 							keywordLabel.setEnabled(false);
@@ -199,8 +204,10 @@ public final class WebSpiderFrame extends JFrame implements Reporter, RemoveKeyw
 						for (KeywordLabel keyword : my_keyword_labels) {
 							my_spider.addKeyword(keyword.getText());
 						}
-						int maxThreads = Integer.valueOf((String) my_max_threads_combo_box.getSelectedItem());
-						my_spider.setNumThreadsPerTask(maxThreads);
+						int maxUrlThreads = Integer.valueOf((String) my_max_url_threads_combo_box.getSelectedItem());
+						my_spider.setNumUrlThreads(maxUrlThreads);
+						int maxPageThreads = Integer.valueOf((String) my_max_page_threads_combo_box.getSelectedItem());
+						my_spider.setNumPageThreads(maxPageThreads);
 						my_spider.start();
 						my_is_running = true;
 					}
@@ -242,8 +249,11 @@ public final class WebSpiderFrame extends JFrame implements Reporter, RemoveKeyw
 		controlsToolBar.add(new JLabel("Multithreaded:"));
 		controlsToolBar.add(my_is_multithreaded_checkbox);
 		controlsToolBar.addSeparator();
-		controlsToolBar.add(new JLabel("Max threads:"));
-		controlsToolBar.add(my_max_threads_combo_box);
+		controlsToolBar.add(new JLabel("Retriever threads:"));
+		controlsToolBar.add(my_max_url_threads_combo_box);
+		controlsToolBar.addSeparator();
+		controlsToolBar.add(new JLabel("Parser threads:"));
+		controlsToolBar.add(my_max_page_threads_combo_box);
 		controlsToolBar.addSeparator();
 		controlsToolBar.add(new JLabel("Page limit: "));
 		controlsToolBar.add(my_page_limit_combo_box);
@@ -260,6 +270,7 @@ public final class WebSpiderFrame extends JFrame implements Reporter, RemoveKeyw
 	private JPanel makeReportPanel() {
 		// create the report panel, and its label
 		final JPanel p = new JPanel(new FlowLayout());
+		p.setBackground(Color.DARK_GRAY);
 		p.add(makeGeneralStatsPanel());//, BorderLayout.LINE_START);
 		layoutKeywordsPanel();
 		p.add(my_keywords_panel);//, BorderLayout.LINE_END);

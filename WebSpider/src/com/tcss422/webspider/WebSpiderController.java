@@ -181,12 +181,21 @@ public class WebSpiderController {
 	}
 	
 	/**
-	 * Sets the number of threads to use for each task (page retrieval and page parsing).
-	 * @param the_num_threads the number of threads per task
+	 * Sets the number of threads to use for retrieving {@link URL}s.
+	 * @param the_num_threads the number of {@link URL} retrieval threads
 	 */
-	public void setNumThreadsPerTask(final int the_num_threads) {
+	public void setNumUrlThreads(final int the_num_threads) {
 		if(my_is_multithreaded) {
 			my_url_pool.setCorePoolSize(the_num_threads);
+		}
+	}
+	
+	/**
+	 * Sets the number of threads to use for parsing {@link Page}s.
+	 * @param the_num_threads the number of parsing threads
+	 */
+	public void setNumPageThreads(final int the_num_threads) {
+		if(my_is_multithreaded) {
 			my_page_pool.setCorePoolSize(the_num_threads);
 		}
 	}
