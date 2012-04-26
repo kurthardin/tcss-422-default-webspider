@@ -53,7 +53,7 @@ public class PageParser implements Runnable {
 				String url_str = match.substring(8, match.length() - 1);
 				
 				if (url_str.endsWith("html") || url_str.endsWith("htm") || 
-						url_str.endsWith("txt")) {
+						url_str.endsWith("txt") || url_str.endsWith("/")) {
 					if (!url_str.startsWith("http://")) {							// Fix url for local links 
 						String url_str_prefix = my_page.my_address.toString();
 						url_str_prefix = url_str_prefix.substring(
