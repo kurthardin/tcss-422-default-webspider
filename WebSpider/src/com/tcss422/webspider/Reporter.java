@@ -17,12 +17,12 @@ import java.net.URL;
 public interface Reporter {
 	void setPageURL(URL url);
 	void setPagesRetrieved(int val);
-	void setAvgWordsPerPage(double val);
-	void setAvgURLsPerPage(double val);
-	void setKeywordAvgHitsPerPage(int keywordId, double val);
-	void setKeywordTotalHitsPerPage(int the_keywordId, double the_val);
-	void setAvgParseTimePerPage(double val);
-	void setTotalRunningTime(double val);
+	void setAvgWordsPerPage(float val);
+	void setAvgURLsPerPage(float val);
+	void setKeywordAvgHitsPerPage(int keywordId, float val);
+	void setKeywordTotalHitsPerPage(int keywordId, int val);
+	void setAvgParseTimePerPage(float val);
+	void setTotalRunningTime(long val);
 	void refresh();
 	void finished();
 }

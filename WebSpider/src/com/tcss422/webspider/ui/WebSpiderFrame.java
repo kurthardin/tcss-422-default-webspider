@@ -16,8 +16,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -57,12 +59,14 @@ public final class WebSpiderFrame extends JFrame implements Reporter, RemoveKeyw
 	public static final int MINIMUM_COMPONENT_WIDTH = 768;
 	public static final int MINIMUM_COMPONENT_HEIGHT = 256;
 
-	public static final int URL_TEXT_FIELD_WIDTH = 50;
+	public static final int URL_TEXT_FIELD_WIDTH = 65;
 
 	public static final String [] MAX_THREAD_OPTIONS = {"1", "2", "3", "4", "5", "10", "25"};
 	public static final String [] PAGE_LIMITS = {"100", "500", "1000", "2500", "5000", "10000"};
 
 	public static final String DEFAULT_URL_STR = "http://faculty.washington.edu/gmobus/index.html";
+	
+	private final DecimalFormat my_decimal_format = new DecimalFormat("#.####"); 
 
 	/**
 	 * The controller used by this GUI.
@@ -220,17 +224,16 @@ public final class WebSpiderFrame extends JFrame implements Reporter, RemoveKeyw
 	 */
 	private JPanel makeReportPanel() {
 		// create the report panel, and its label
-		final JPanel p = new JPanel(new FlowLayout());
+		final JPanel p = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 15));
 		p.setBackground(Color.DARK_GRAY);
-		p.add(makeGeneralStatsPanel());//, BorderLayout.LINE_START);
+		p.add(makeGeneralStatsPanel());//, BorderLayout.PAGE_START);
 		layoutKeywordsPanel();
-		p.add(my_keywords_panel);//, BorderLayout.LINE_END);
+		p.add(my_keywords_panel);//, BorderLayout.PAGE_START);
 		return p;
 	}
 
 	private JPanel makeGeneralStatsPanel() {
 		final JPanel statsPanel = new JPanel(new GridLayout(5, 2));
-//		statsPanel.setBackground(Color.GREEN);
 
 		statsPanel.add(new JLabel("Pages retrieved: "));
 		statsPanel.add(my_page_count);
@@ -253,7 +256,7 @@ public final class WebSpiderFrame extends JFrame implements Reporter, RemoveKeyw
 	private JPanel layoutKeywordsPanel() {
 		int rows = my_keyword_labels.size()+2;
 		my_keywords_panel.setLayout(new GridLayout(rows,3));
-//		my_keywords_panel.setBackground(Color.YELLOW);
+		my_keywords_panel.setAlignmentX(TOP_ALIGNMENT);
 		
 		my_keywords_panel.removeAll();
 		my_keywords_panel.add(new JLabel("Keywords:"));
@@ -319,25 +322,25 @@ public final class WebSpiderFrame extends JFrame implements Reporter, RemoveKeyw
 	}
 
 	@Override
-	public void setAvgWordsPerPage(double the_val) {
-		my_avg_words_per_page.setText(String.valueOf(the_val));
+	public void setAvgWordsPerPage(float the_val) {
+		my_avg_words_per_page.setText(my_decimal_format.format(the_val));
 	}
 
 	@Override
-	public void setAvgURLsPerPage(double the_val) {
-		my_avg_urls_per_page.setText(String.valueOf(the_val));
+	public void setAvgURLsPerPage(float the_val) {
+		my_avg_urls_per_page.setText(my_decimal_format.format(the_val));
 	}
 
 	@Override
-	public void setKeywordAvgHitsPerPage(int the_keywordId, double the_val) {
+	public void setKeywordAvgHitsPerPage(int the_keywordId, float the_val) {
 		JTextField label = my_keywords_avg_hits_per_page.get(the_keywordId);
 		if (label != null) {
-			label.setText(String.valueOf(the_val));
+			label.setText(my_decimal_format.format(the_val));
 		}
 	}
 
 	@Override
-	public void setKeywordTotalHitsPerPage(int the_keywordId, double the_val) {
+	public void setKeywordTotalHitsPerPage(int the_keywordId, int the_val) {
 		JTextField label = my_keywords_total_hits_per_page.get(the_keywordId);
 		if (label != null) {
 			label.setText(String.valueOf(the_val));
@@ -345,13 +348,13 @@ public final class WebSpiderFrame extends JFrame implements Reporter, RemoveKeyw
 	}
 
 	@Override
-	public void setAvgParseTimePerPage(double the_val_nanos) {
-		my_avg_parse_time_per_page.setText(String.valueOf(the_val_nanos / 1000000) + " ms");
+	public void setAvgParseTimePerPage(float the_val_nanos) {
+		my_avg_parse_time_per_page.setText(my_decimal_format.format(the_val_nanos / 1000000) + " ms");
 	}
 
 	@Override
-	public void setTotalRunningTime(double the_val_nanos) {
-		my_total_runtime.setText(String.valueOf(the_val_nanos / 1000000000) + " s");
+	public void setTotalRunningTime(long the_val_nanos) {
+		my_total_runtime.setText(my_decimal_format.format((float) the_val_nanos / 1000000000) + " s");
 	}
 
 	@Override

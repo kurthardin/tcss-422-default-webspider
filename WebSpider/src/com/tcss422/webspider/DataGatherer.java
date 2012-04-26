@@ -22,8 +22,8 @@ public class DataGatherer {
 	private long my_total_words;
 	private long my_total_urls;
 	private final int [] my_total_keyword_counts;
-	private long my_total_parse_time;
-	private long my_total_running_time;
+	private long my_total_parse_time_nanos;
+	private long my_total_running_time_nanos;
 	
 	public DataGatherer(Reporter the_reporter, WebSpiderController the_controller) {
 		my_reporter = the_reporter;
@@ -42,8 +42,8 @@ public class DataGatherer {
 		my_pages_retrieved++;
 		my_total_words += a_page.my_word_count;
 		my_total_urls += a_page.my_links.size();
-		my_total_parse_time += ((a_page.my_parse_stop - a_page.my_parse_start) / 1000);
-		my_total_running_time = System.nanoTime() - my_controller.getStartTime();
+		my_total_parse_time_nanos += ((a_page.my_parse_stop - a_page.my_parse_start));
+		my_total_running_time_nanos = System.nanoTime() - my_controller.getStartTime();
 		for (int i = 0; i < my_total_keyword_counts.length && 
 				i < a_page.my_keyword_counts.length; i++) {
 			my_total_keyword_counts[i] += a_page.my_keyword_counts[i];
@@ -58,12 +58,12 @@ public class DataGatherer {
 	private void updateReporter(final URL a_url) {
 		my_reporter.setPageURL(a_url);
 		my_reporter.setPagesRetrieved(my_pages_retrieved);
-		my_reporter.setAvgWordsPerPage(my_total_words / my_pages_retrieved);
-		my_reporter.setAvgURLsPerPage(my_total_urls / my_pages_retrieved);
-		my_reporter.setAvgParseTimePerPage(my_total_parse_time / my_pages_retrieved);
-		my_reporter.setTotalRunningTime(my_total_running_time);
+		my_reporter.setAvgWordsPerPage((float) my_total_words / my_pages_retrieved);
+		my_reporter.setAvgURLsPerPage((float) my_total_urls / my_pages_retrieved);
+		my_reporter.setAvgParseTimePerPage((float) my_total_parse_time_nanos / my_pages_retrieved);
+		my_reporter.setTotalRunningTime(my_total_running_time_nanos);
 		for (int i = 0; i < my_controller.getKeywords().size(); i++) {
-			my_reporter.setKeywordAvgHitsPerPage(i, my_total_keyword_counts[i] / my_pages_retrieved);
+			my_reporter.setKeywordAvgHitsPerPage(i, (float) my_total_keyword_counts[i] / my_pages_retrieved);
 			my_reporter.setKeywordTotalHitsPerPage(i, my_total_keyword_counts[i]);
 		}
 		my_reporter.refresh();
