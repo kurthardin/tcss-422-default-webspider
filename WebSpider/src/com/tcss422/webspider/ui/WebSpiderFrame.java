@@ -63,7 +63,7 @@ public final class WebSpiderFrame extends JFrame implements Reporter, RemoveKeyw
 	public static final int URL_TEXT_FIELD_WIDTH = 65;
 
 	public static final String [] MAX_THREAD_OPTIONS = {"1", "2", "3", "4", "5", "10", "25"};
-	public static final String [] PAGE_LIMITS = {"50", "100", "500", "1000", "2500", "5000", "10000"};
+	public static final String [] PAGE_LIMITS = {"100", "500", "1000", "2500", "5000", "10000"};
 
 	public static final String DEFAULT_URL_STR = "http://faculty.washington.edu/gmobus/index.html";
 	
@@ -421,7 +421,7 @@ public final class WebSpiderFrame extends JFrame implements Reporter, RemoveKeyw
 					int pageLimit = Integer.valueOf((String) my_page_limit_combo_box.getSelectedItem());
 					boolean multithreaded = true;
 					int maxUrlThreads = Integer.valueOf(MAX_THREAD_OPTIONS[my_batch_test_num_threads_idx]);
-					int maxPageThreads = 5;
+					int maxPageThreads = Integer.valueOf((String) my_max_page_threads_combo_box.getSelectedItem());
 					startNewSpider(baseUrl, pageLimit, multithreaded, maxUrlThreads, maxPageThreads);
 				}
 			}
