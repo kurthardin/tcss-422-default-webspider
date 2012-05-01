@@ -1,6 +1,10 @@
-/**
- * 
+/*
+ * TCSS 422 Spring 2012 - Web Spider
+ * Team: Default
+ * Kurt Hardin
+ * Daniel Bartholomew
  */
+
 package com.tcss422.webspider.ui;
 
 import java.awt.BasicStroke;
