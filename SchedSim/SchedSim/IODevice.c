@@ -10,18 +10,27 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
+
 #include "IODevice.h"
 
-void *run(void *);
+#define BLOCKED_QUEUE_SIZE 10
 
-pthread_t * io_device_init(char * type) {
-    pthread_t *thread_id = malloc(sizeof(pthread_t));
-    pthread_create(thread_id, NULL, run, (void *)type);
-    return thread_id;
+void* run(void*);
+
+IODevice* io_device_init(char* type) {
+    IODevice* device = malloc(sizeof(IODevice));
+    device->type = type;
+    device->blocked_queue = pcb_queue_init();
+    return device;
 }
 
-void *run(void * type) {
-    printf("%s device running", (char *)type);
+void io_device_service(IODevice* device) {
+    pthread_t* tid = malloc(sizeof(pthread_t));
+    pthread_create(tid, NULL, run, (void*)device->type);
+}
+
+void* run(void* type) {
+    printf("%s device running", (char*)type);
     
     srand(time(NULL));
     sleep(rand() % 5000);

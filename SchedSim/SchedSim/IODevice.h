@@ -8,9 +8,18 @@
 
 #include <pthread.h>
 
+#include "PCB.h"
+#include "PCBQueue.h"
+
 #ifndef SchedSim_IODevice_h
 #define SchedSim_IODevice_h
 
-pthread_t * io_device_init(char *);
+typedef struct {
+    char* type;
+    PCBQueue* blocked_queue;
+} IODevice;
+
+IODevice* io_device_init(char*);
+void io_device_service(IODevice*);
 
 #endif
