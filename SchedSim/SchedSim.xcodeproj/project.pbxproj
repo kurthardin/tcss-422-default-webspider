@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		656C3719155AD788009C92A3 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 656C3718155AD788009C92A3 /* main.c */; };
 		656C371B155AD788009C92A3 /* SchedSim.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 656C371A155AD788009C92A3 /* SchedSim.1 */; };
+		65D4616D15656C9B0016BF9A /* CPU.c in Sources */ = {isa = PBXBuildFile; fileRef = 65D4616C15656C9B0016BF9A /* CPU.c */; };
+		65D461731565713C0016BF9A /* Process.c in Sources */ = {isa = PBXBuildFile; fileRef = 65D461721565713C0016BF9A /* Process.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -28,6 +30,15 @@
 		656C3714155AD788009C92A3 /* SchedSim */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = SchedSim; sourceTree = BUILT_PRODUCTS_DIR; };
 		656C3718155AD788009C92A3 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		656C371A155AD788009C92A3 /* SchedSim.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = SchedSim.1; sourceTree = "<group>"; };
+		65D461681565662A0016BF9A /* Process.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Process.h; sourceTree = "<group>"; };
+		65D4616A1565668D0016BF9A /* PCB.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PCB.h; sourceTree = "<group>"; };
+		65D4616B156568420016BF9A /* CPU.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CPU.h; sourceTree = "<group>"; };
+		65D4616C15656C9B0016BF9A /* CPU.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = CPU.c; sourceTree = "<group>"; };
+		65D4616E15656D190016BF9A /* Scheduler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Scheduler.h; sourceTree = "<group>"; };
+		65D4616F15656D770016BF9A /* IODevice.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IODevice.h; sourceTree = "<group>"; };
+		65D4617015656DA80016BF9A /* SysTimer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SysTimer.h; sourceTree = "<group>"; };
+		65D4617115656F510016BF9A /* RequestType.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RequestType.h; sourceTree = "<group>"; };
+		65D461721565713C0016BF9A /* Process.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Process.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,6 +73,15 @@
 			children = (
 				656C3718155AD788009C92A3 /* main.c */,
 				656C371A155AD788009C92A3 /* SchedSim.1 */,
+				65D461681565662A0016BF9A /* Process.h */,
+				65D461721565713C0016BF9A /* Process.c */,
+				65D4616A1565668D0016BF9A /* PCB.h */,
+				65D4616B156568420016BF9A /* CPU.h */,
+				65D4616C15656C9B0016BF9A /* CPU.c */,
+				65D4616E15656D190016BF9A /* Scheduler.h */,
+				65D4616F15656D770016BF9A /* IODevice.h */,
+				65D4617015656DA80016BF9A /* SysTimer.h */,
+				65D4617115656F510016BF9A /* RequestType.h */,
 			);
 			path = SchedSim;
 			sourceTree = "<group>";
@@ -118,6 +138,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				656C3719155AD788009C92A3 /* main.c in Sources */,
+				65D4616D15656C9B0016BF9A /* CPU.c in Sources */,
+				65D461731565713C0016BF9A /* Process.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -204,6 +226,7 @@
 				656C3720155AD788009C92A3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
