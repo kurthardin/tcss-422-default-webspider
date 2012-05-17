@@ -13,8 +13,8 @@
 #define REQUEST_TYPE_SYNC   1
 
 typedef struct {
-    int step
-    int type
-} RequestType
+    int step;
+    int type;
+} RequestType;
 
 #endif
