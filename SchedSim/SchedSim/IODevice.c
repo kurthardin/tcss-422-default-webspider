@@ -9,6 +9,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <time.h>
 #include "IODevice.h"
 
 void *run(void *);
@@ -21,7 +22,11 @@ pthread_t * io_device_init(char * type) {
 
 void *run(void * type) {
     printf("%s device running", (char *)type);
-    sleep(500); // TODO set randomly
+    
+    srand(time(NULL));
+    sleep(rand() % 5000);
+    
     // TODO Generate interrupt
+    
     return EXIT_SUCCESS;
 }
