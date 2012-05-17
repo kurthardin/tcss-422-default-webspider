@@ -11,6 +11,7 @@
 		656C371B155AD788009C92A3 /* SchedSim.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 656C371A155AD788009C92A3 /* SchedSim.1 */; };
 		65D4616D15656C9B0016BF9A /* CPU.c in Sources */ = {isa = PBXBuildFile; fileRef = 65D4616C15656C9B0016BF9A /* CPU.c */; };
 		65D461731565713C0016BF9A /* Process.c in Sources */ = {isa = PBXBuildFile; fileRef = 65D461721565713C0016BF9A /* Process.c */; };
+		65D4617515658A030016BF9A /* IODevice.c in Sources */ = {isa = PBXBuildFile; fileRef = 65D4617415658A030016BF9A /* IODevice.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -39,6 +40,7 @@
 		65D4617015656DA80016BF9A /* SysTimer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SysTimer.h; sourceTree = "<group>"; };
 		65D4617115656F510016BF9A /* RequestType.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RequestType.h; sourceTree = "<group>"; };
 		65D461721565713C0016BF9A /* Process.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Process.c; sourceTree = "<group>"; };
+		65D4617415658A030016BF9A /* IODevice.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = IODevice.c; path = ../IODevice.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -80,6 +82,7 @@
 				65D4616C15656C9B0016BF9A /* CPU.c */,
 				65D4616E15656D190016BF9A /* Scheduler.h */,
 				65D4616F15656D770016BF9A /* IODevice.h */,
+				65D4617415658A030016BF9A /* IODevice.c */,
 				65D4617015656DA80016BF9A /* SysTimer.h */,
 				65D4617115656F510016BF9A /* RequestType.h */,
 			);
@@ -140,6 +143,7 @@
 				656C3719155AD788009C92A3 /* main.c in Sources */,
 				65D4616D15656C9B0016BF9A /* CPU.c in Sources */,
 				65D461731565713C0016BF9A /* Process.c in Sources */,
+				65D4617515658A030016BF9A /* IODevice.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
