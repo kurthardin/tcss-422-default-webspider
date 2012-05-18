@@ -15,7 +15,7 @@ PCBQueue* pcb_queue_init() {
 }
 
 void pcb_queue_enqueue(PCBQueue* queue, PCB* pcb) {
-    linked_queue_enqueue(queue, linked_queue_node_init((void*)pcb));
+    linked_queue_enqueue(queue, (void*) pcb);
 }
 
 PCB* pcb_queue_dequeue(PCBQueue* queue) {

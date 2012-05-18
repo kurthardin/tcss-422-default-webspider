@@ -19,7 +19,10 @@ LinkedQueue* linked_queue_init() {
     return queue;
 }
 
-void linked_queue_enqueue(LinkedQueue* queue, LinkedQueueNode* new_tail) {
+void linked_queue_enqueue(LinkedQueue* queue, void* data) {
+    
+    LinkedQueueNode* new_tail = linked_queue_node_init(data);
+    
     if (queue->head == NULL) {
         queue->head = new_tail;
     }
@@ -32,7 +35,7 @@ void linked_queue_enqueue(LinkedQueue* queue, LinkedQueueNode* new_tail) {
     queue->size++;
 }
 
-LinkedQueueNode* linked_queue_dequeue(LinkedQueue* queue) {
+void* linked_queue_dequeue(LinkedQueue* queue) {
     
     LinkedQueueNode* old_head = queue->head;
     if (old_head != NULL) {
@@ -40,5 +43,5 @@ LinkedQueueNode* linked_queue_dequeue(LinkedQueue* queue) {
         queue->size--;
     }
     
-    return old_head;
+    return old_head->data;
 }

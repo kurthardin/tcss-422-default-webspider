@@ -18,7 +18,7 @@ typedef struct {
 } LinkedQueue;
 
 LinkedQueue* linked_queue_init();
-void linked_queue_enqueue(LinkedQueue*, LinkedQueueNode*);
-LinkedQueueNode* linked_queue_dequeue(LinkedQueue*);
+void linked_queue_enqueue(LinkedQueue*, void*);
+void* linked_queue_dequeue(LinkedQueue*);
 
 #endif
