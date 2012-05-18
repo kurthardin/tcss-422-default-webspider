@@ -12,7 +12,7 @@
 		65D4616D15656C9B0016BF9A /* CPU.c in Sources */ = {isa = PBXBuildFile; fileRef = 65D4616C15656C9B0016BF9A /* CPU.c */; };
 		65D461731565713C0016BF9A /* Process.c in Sources */ = {isa = PBXBuildFile; fileRef = 65D461721565713C0016BF9A /* Process.c */; };
 		65D46177156591A00016BF9A /* IODevice.c in Sources */ = {isa = PBXBuildFile; fileRef = 65D46176156591A00016BF9A /* IODevice.c */; };
-		65D4617B15659B300016BF9A /* LinkedQueue.c in Sources */ = {isa = PBXBuildFile; fileRef = 65D4617A15659B2F0016BF9A /* LinkedQueue.c */; };
+		65D4617B15659B300016BF9A /* LinkedBlockingQueue.c in Sources */ = {isa = PBXBuildFile; fileRef = 65D4617A15659B2F0016BF9A /* LinkedBlockingQueue.c */; };
 		65D4617D1565A0100016BF9A /* LinkedQueueNode.c in Sources */ = {isa = PBXBuildFile; fileRef = 65D4617C1565A0100016BF9A /* LinkedQueueNode.c */; };
 		65D461801565A1A00016BF9A /* PCBQueue.c in Sources */ = {isa = PBXBuildFile; fileRef = 65D4617F1565A1A00016BF9A /* PCBQueue.c */; };
 /* End PBXBuildFile section */
@@ -44,9 +44,9 @@
 		65D4617115656F510016BF9A /* RequestType.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RequestType.h; sourceTree = "<group>"; };
 		65D461721565713C0016BF9A /* Process.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Process.c; sourceTree = "<group>"; };
 		65D46176156591A00016BF9A /* IODevice.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = IODevice.c; sourceTree = "<group>"; };
-		65D46178156599040016BF9A /* LinkedQueue.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LinkedQueue.h; sourceTree = "<group>"; };
+		65D46178156599040016BF9A /* LinkedBlockingQueue.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LinkedBlockingQueue.h; sourceTree = "<group>"; };
 		65D4617915659AAD0016BF9A /* LinkedQueueNode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LinkedQueueNode.h; sourceTree = "<group>"; };
-		65D4617A15659B2F0016BF9A /* LinkedQueue.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = LinkedQueue.c; sourceTree = "<group>"; };
+		65D4617A15659B2F0016BF9A /* LinkedBlockingQueue.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = LinkedBlockingQueue.c; sourceTree = "<group>"; };
 		65D4617C1565A0100016BF9A /* LinkedQueueNode.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = LinkedQueueNode.c; sourceTree = "<group>"; };
 		65D4617E1565A1020016BF9A /* PCBQueue.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PCBQueue.h; sourceTree = "<group>"; };
 		65D4617F1565A1A00016BF9A /* PCBQueue.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = PCBQueue.c; sourceTree = "<group>"; };
@@ -102,12 +102,12 @@
 		65D461811565A49A0016BF9A /* Queues */ = {
 			isa = PBXGroup;
 			children = (
-				65D46178156599040016BF9A /* LinkedQueue.h */,
-				65D4617A15659B2F0016BF9A /* LinkedQueue.c */,
-				65D4617915659AAD0016BF9A /* LinkedQueueNode.h */,
-				65D4617C1565A0100016BF9A /* LinkedQueueNode.c */,
 				65D4617E1565A1020016BF9A /* PCBQueue.h */,
 				65D4617F1565A1A00016BF9A /* PCBQueue.c */,
+				65D46178156599040016BF9A /* LinkedBlockingQueue.h */,
+				65D4617A15659B2F0016BF9A /* LinkedBlockingQueue.c */,
+				65D4617915659AAD0016BF9A /* LinkedQueueNode.h */,
+				65D4617C1565A0100016BF9A /* LinkedQueueNode.c */,
 			);
 			name = Queues;
 			sourceTree = "<group>";
@@ -167,7 +167,7 @@
 				65D4616D15656C9B0016BF9A /* CPU.c in Sources */,
 				65D461731565713C0016BF9A /* Process.c in Sources */,
 				65D46177156591A00016BF9A /* IODevice.c in Sources */,
-				65D4617B15659B300016BF9A /* LinkedQueue.c in Sources */,
+				65D4617B15659B300016BF9A /* LinkedBlockingQueue.c in Sources */,
 				65D4617D1565A0100016BF9A /* LinkedQueueNode.c in Sources */,
 				65D461801565A1A00016BF9A /* PCBQueue.c in Sources */,
 			);

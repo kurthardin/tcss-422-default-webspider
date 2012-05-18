@@ -6,7 +6,7 @@
 //  Copyright (c) 2012 University of Washington at Tacoma. All rights reserved.
 //
 
-#include "LinkedQueue.h"
+#include "LinkedBlockingQueue.h"
 #include "PCB.h"
 
 #ifndef SchedSim_PCBQueue_h

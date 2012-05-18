@@ -9,7 +9,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "LinkedQueue.h"
+#include "LinkedBlockingQueue.h"
 
 LinkedBlockingQueue* linked_blocking_queue_init() {
     LinkedBlockingQueue* queue = malloc(sizeof(LinkedBlockingQueue));
