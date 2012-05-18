@@ -12,7 +12,7 @@
 #ifndef SchedSim_PCBQueue_h
 #define SchedSim_PCBQueue_h
 
-typedef LinkedQueue PCBQueue;
+typedef LinkedBlockingQueue PCBQueue;
 
 PCBQueue* pcb_queue_init();
 void pcb_queue_enqueue(PCBQueue*, PCB*);

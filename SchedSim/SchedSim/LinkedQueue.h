@@ -6,6 +6,8 @@
 //  Copyright (c) 2012 University of Washington at Tacoma. All rights reserved.
 //
 
+#import <pthread.h>
+
 #import "LinkedQueueNode.h"
 
 #ifndef SchedSim_LinkedQueue_h
@@ -15,10 +17,12 @@ typedef struct {
     LinkedQueueNode* head;
     LinkedQueueNode* tail;
     int size;
-} LinkedQueue;
+    pthread_mutex_t* mod_mutex;
+    pthread_cond_t* mod_sig;
+} LinkedBlockingQueue;
 
-LinkedQueue* linked_queue_init();
-void linked_queue_enqueue(LinkedQueue*, void*);
-void* linked_queue_dequeue(LinkedQueue*);
+LinkedBlockingQueue* linked_blocking_queue_init();
+void linked_blocking_queue_enqueue(LinkedBlockingQueue*, void*);
+void* linked_blocking_queue_dequeue(LinkedBlockingQueue*);
 
 #endif
