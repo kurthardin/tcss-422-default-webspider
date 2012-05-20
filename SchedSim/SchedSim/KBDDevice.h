@@ -8,10 +8,10 @@
 
 #include <pthread.h>
 
-#include "CPU.h"
-
 #ifndef SchedSim_KBDDevice_h
 #define SchedSim_KBDDevice_h
+
+#include "CPU.h"
 
 typedef struct {
     char key;

@@ -11,8 +11,9 @@
 
 #include "Scheduler.h"
 
-Scheduler * Scheduler_init() {
+Scheduler * Scheduler_init(CPU *cpu) {
     Scheduler *sched = malloc(sizeof(Scheduler));
+    sched->processList = malloc(sizeof(PCB)*MAX_PROCESSES);
     sched->readyQueue = pcb_queue_init();
     return sched;
 }

@@ -6,8 +6,6 @@
 //  Copyright (c) 2012 University of Washington at Tacoma. All rights reserved.
 //
 
-#include "LinkedBlockingQueue.h"
-
 #ifndef SchedSim_Interrupt_h
 #define SchedSim_Interrupt_h
 
@@ -27,11 +25,24 @@ Interrupt Interrupt_make(int type/*, int priority*/, void *);
 #endif
 
 
+
+
+
+
+#include "LinkedBlockingQueue.h"
+#include "IODevice.h"
+#include "KBDDevice.h"
+#include "SharedMem.h"
+
 #ifndef SchedSim_CPU_h
 #define SchedSim_CPU_h
 
 typedef struct {
     LinkedBlockingQueue *interruptQueues[10];
+    IODevice *dvcDisk;
+    IODevice *dvcVid;
+    KBDDevice *dvcKbd;
+    SharedMemory *sharedMemory;
 } CPU;
 
 void CPU_signalInterrupt(CPU *, Interrupt);

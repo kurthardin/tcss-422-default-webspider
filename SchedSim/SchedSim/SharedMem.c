@@ -11,21 +11,21 @@
 
 #include "SharedMem.h"
 
-SharedMemory* shared_memory_init() {
+SharedMemory * SharedMemory_init() {
     SharedMemory* sharedMem = malloc(sizeof(SharedMemory));
-    pthread_mutex_init(sharedMem->mod_mutex, NULL);
-    pthread_cond_init(sharedMem->mod_sig, NULL);
+    sharedMem->mutexOwner = NULL;
+    sharedMem->mutexBlockedQueue = pcb_queue_init();
     return sharedMem;
 }
 
 int SharedMemory_read(SharedMemory* sharedMemory) {
-    pthread_mutex_lock(sharedMemory->mod_mutex);
-    pthread_cond_wait(sharedMemory->mod_sig, sharedMemory->mod_mutex);
+    // TODO lock
     return sharedMemory->data;
+    // TODO unlock
 }
 
 void SharedMemory_write(SharedMemory* sharedMemory, int new_data) {
-    pthread_mutex_lock(sharedMemory->mod_mutex);
+    // TODO lock
     sharedMemory->data = new_data;
-    pthread_mutex_unlock(sharedMemory->mod_mutex);
+    // TODO unlock
 }

@@ -8,12 +8,12 @@
 
 #include <pthread.h>
 
+#ifndef SchedSim_IODevice_h
+#define SchedSim_IODevice_h
+
 #include "CPU.h"
 #include "PCB.h"
 #include "PCBQueue.h"
-
-#ifndef SchedSim_IODevice_h
-#define SchedSim_IODevice_h
 
 typedef struct {
     char *type;
