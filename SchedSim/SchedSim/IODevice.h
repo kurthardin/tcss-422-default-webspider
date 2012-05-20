@@ -8,6 +8,7 @@
 
 #include <pthread.h>
 
+#include "CPU.h"
 #include "PCB.h"
 #include "PCBQueue.h"
 
@@ -15,11 +16,12 @@
 #define SchedSim_IODevice_h
 
 typedef struct {
-    char* type;
-    PCBQueue* blocked_queue;
+    char *type;
+    PCBQueue *blocked_queue;
+    CPU *cpu;
+    pthread_t *tid;
 } IODevice;
 
-IODevice* io_device_init(char*);
-void io_device_service(IODevice*);
+IODevice * IODevice_init(char *, CPU *);
 
 #endif

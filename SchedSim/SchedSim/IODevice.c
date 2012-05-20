@@ -13,29 +13,34 @@
 
 #include "IODevice.h"
 
-#define BLOCKED_QUEUE_SIZE 10
-
 void* run(void*);
 
-IODevice* io_device_init(char* type) {
-    IODevice* device = malloc(sizeof(IODevice));
+IODevice * IODevice_init(char *type, CPU *cpu) {
+    IODevice *device = malloc(sizeof(IODevice));
     device->type = type;
     device->blocked_queue = pcb_queue_init();
+    device->cpu = cpu;
+    device->tid = malloc(sizeof(pthread_t));
+    pthread_create(device->tid, NULL, run, (void *)device);
     return device;
 }
 
-void io_device_service(IODevice* device) {
-    pthread_t* tid = malloc(sizeof(pthread_t));
-    pthread_create(tid, NULL, run, (void*)device->type);
-}
-
-void* run(void* type) {
-    printf("%s device running", (char*)type);
+void * run(void *arg) {
     
-    srand(time(NULL));
-    sleep(rand() % 5000);
+    IODevice *device = (IODevice *)arg;
+    PCB *pcb = pcb_queue_dequeue(device->blocked_queue);;
     
-    // TODO Generate interrupt
+    while (pcb != NULL) { // CAN THIS THREAD BE STOPPED WITH pthread_dettach?
+        
+        printf("%s device running to service process %d", device->type, pcb->pid);
+        
+        srand(time(NULL));
+        sleep(rand() % 5000);
+        
+        CPU_signalInterrupt(device->cpu, Interrupt_make(INTERRUPT_TYPE_IO));
+        
+        pcb = pcb_queue_dequeue(device->blocked_queue);
+    }
     
     return EXIT_SUCCESS;
 }

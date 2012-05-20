@@ -9,3 +9,12 @@
 #include <stdio.h>
 #include "CPU.h"
 
+Interrupt Interrupt_make(int type) {
+    Interrupt interrupt = {type};
+    return interrupt;
+}
+
+
+void CPU_signalInterrupt(CPU *cpu, Interrupt interrupt) {
+    // STUB
+}
