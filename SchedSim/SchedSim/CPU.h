@@ -11,8 +11,9 @@
 #ifndef SchedSim_Interrupt_h
 #define SchedSim_Interrupt_h
 
-#define INTERRUPT_TYPE_IO   1
-#define INTERRUPT_TYPE_KBD  2
+#define INTERRUPT_TYPE_IO       1
+#define INTERRUPT_TYPE_KBD      2
+#define INTERRUPT_TYPE_TIMER    3
 // Add more as needed
 
 typedef struct {

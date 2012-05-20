@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		6548A62D15696818008D815C /* KBDDevice.c in Sources */ = {isa = PBXBuildFile; fileRef = 6548A62C15696818008D815C /* KBDDevice.c */; };
+		6548A62F15697184008D815C /* SysTimer.c in Sources */ = {isa = PBXBuildFile; fileRef = 6548A62E15697184008D815C /* SysTimer.c */; };
+		6548A631156974E9008D815C /* Scheduler.c in Sources */ = {isa = PBXBuildFile; fileRef = 6548A630156974E9008D815C /* Scheduler.c */; };
 		656C3719155AD788009C92A3 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 656C3718155AD788009C92A3 /* main.c */; };
 		656C371B155AD788009C92A3 /* SchedSim.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 656C371A155AD788009C92A3 /* SchedSim.1 */; };
 		65D4616D15656C9B0016BF9A /* CPU.c in Sources */ = {isa = PBXBuildFile; fileRef = 65D4616C15656C9B0016BF9A /* CPU.c */; };
@@ -34,6 +36,8 @@
 /* Begin PBXFileReference section */
 		6548A62A156967C5008D815C /* KBDDevice.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KBDDevice.h; sourceTree = "<group>"; };
 		6548A62C15696818008D815C /* KBDDevice.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = KBDDevice.c; sourceTree = "<group>"; };
+		6548A62E15697184008D815C /* SysTimer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = SysTimer.c; sourceTree = "<group>"; };
+		6548A630156974E9008D815C /* Scheduler.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Scheduler.c; sourceTree = "<group>"; };
 		656C3714155AD788009C92A3 /* SchedSim */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = SchedSim; sourceTree = BUILT_PRODUCTS_DIR; };
 		656C3718155AD788009C92A3 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		656C371A155AD788009C92A3 /* SchedSim.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = SchedSim.1; sourceTree = "<group>"; };
@@ -93,11 +97,13 @@
 				65D4616B156568420016BF9A /* CPU.h */,
 				65D4616C15656C9B0016BF9A /* CPU.c */,
 				65D4616E15656D190016BF9A /* Scheduler.h */,
+				6548A630156974E9008D815C /* Scheduler.c */,
 				65D4616F15656D770016BF9A /* IODevice.h */,
 				65D46176156591A00016BF9A /* IODevice.c */,
 				6548A62A156967C5008D815C /* KBDDevice.h */,
 				6548A62C15696818008D815C /* KBDDevice.c */,
 				65D4617015656DA80016BF9A /* SysTimer.h */,
+				6548A62E15697184008D815C /* SysTimer.c */,
 				65D4617115656F510016BF9A /* RequestType.h */,
 				65D461811565A49A0016BF9A /* Queues */,
 			);
@@ -176,6 +182,8 @@
 				65D4617D1565A0100016BF9A /* LinkedQueueNode.c in Sources */,
 				65D461801565A1A00016BF9A /* PCBQueue.c in Sources */,
 				6548A62D15696818008D815C /* KBDDevice.c in Sources */,
+				6548A62F15697184008D815C /* SysTimer.c in Sources */,
+				6548A631156974E9008D815C /* Scheduler.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -28,7 +28,7 @@ IODevice * IODevice_init(char *type, CPU *cpu) {
 void * IODevice_run(void *arg) {
     
     IODevice *device = (IODevice *)arg;
-    PCB *pcb = pcb_queue_dequeue(device->blocked_queue);;
+    PCB *pcb = pcb_queue_dequeue(device->blocked_queue);
     
     while (pcb != NULL) { // CAN THIS THREAD BE STOPPED WITH pthread_dettach?
         
