@@ -9,8 +9,8 @@
 #include <stdio.h>
 #include "CPU.h"
 
-Interrupt Interrupt_make(int type) {
-    Interrupt interrupt = {type};
+Interrupt Interrupt_make(int type, void *src) {
+    Interrupt interrupt = {type, src};
     return interrupt;
 }
 

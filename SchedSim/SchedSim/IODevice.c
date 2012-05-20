@@ -13,7 +13,7 @@
 
 #include "IODevice.h"
 
-void* run(void*);
+void * IODevice_run(void *);
 
 IODevice * IODevice_init(char *type, CPU *cpu) {
     IODevice *device = malloc(sizeof(IODevice));
@@ -21,11 +21,11 @@ IODevice * IODevice_init(char *type, CPU *cpu) {
     device->blocked_queue = pcb_queue_init();
     device->cpu = cpu;
     device->tid = malloc(sizeof(pthread_t));
-    pthread_create(device->tid, NULL, run, (void *)device);
+    pthread_create(device->tid, NULL, IODevice_run, device);
     return device;
 }
 
-void * run(void *arg) {
+void * IODevice_run(void *arg) {
     
     IODevice *device = (IODevice *)arg;
     PCB *pcb = pcb_queue_dequeue(device->blocked_queue);;
@@ -37,7 +37,7 @@ void * run(void *arg) {
         srand(time(NULL));
         sleep(rand() % 5000);
         
-        CPU_signalInterrupt(device->cpu, Interrupt_make(INTERRUPT_TYPE_IO));
+        CPU_signalInterrupt(device->cpu, Interrupt_make(INTERRUPT_TYPE_IO, device));
         
         pcb = pcb_queue_dequeue(device->blocked_queue);
     }
