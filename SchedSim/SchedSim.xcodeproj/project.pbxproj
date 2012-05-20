@@ -18,6 +18,7 @@
 		65D4617B15659B300016BF9A /* LinkedBlockingQueue.c in Sources */ = {isa = PBXBuildFile; fileRef = 65D4617A15659B2F0016BF9A /* LinkedBlockingQueue.c */; };
 		65D4617D1565A0100016BF9A /* LinkedQueueNode.c in Sources */ = {isa = PBXBuildFile; fileRef = 65D4617C1565A0100016BF9A /* LinkedQueueNode.c */; };
 		65D461801565A1A00016BF9A /* PCBQueue.c in Sources */ = {isa = PBXBuildFile; fileRef = 65D4617F1565A1A00016BF9A /* PCBQueue.c */; };
+		E832148E1569782A002C55B2 /* SharedMem.c in Sources */ = {isa = PBXBuildFile; fileRef = E832148D1569782A002C55B2 /* SharedMem.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -57,6 +58,8 @@
 		65D4617C1565A0100016BF9A /* LinkedQueueNode.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = LinkedQueueNode.c; sourceTree = "<group>"; };
 		65D4617E1565A1020016BF9A /* PCBQueue.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PCBQueue.h; sourceTree = "<group>"; };
 		65D4617F1565A1A00016BF9A /* PCBQueue.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = PCBQueue.c; sourceTree = "<group>"; };
+		E832148D1569782A002C55B2 /* SharedMem.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = SharedMem.c; sourceTree = "<group>"; };
+		E832149015697845002C55B2 /* SharedMem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SharedMem.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -89,6 +92,8 @@
 		656C3717155AD788009C92A3 /* SchedSim */ = {
 			isa = PBXGroup;
 			children = (
+				E832148D1569782A002C55B2 /* SharedMem.c */,
+				E832149015697845002C55B2 /* SharedMem.h */,
 				656C3718155AD788009C92A3 /* main.c */,
 				656C371A155AD788009C92A3 /* SchedSim.1 */,
 				65D461681565662A0016BF9A /* Process.h */,
@@ -184,6 +189,7 @@
 				6548A62D15696818008D815C /* KBDDevice.c in Sources */,
 				6548A62F15697184008D815C /* SysTimer.c in Sources */,
 				6548A631156974E9008D815C /* Scheduler.c in Sources */,
+				E832148E1569782A002C55B2 /* SharedMem.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
