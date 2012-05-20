@@ -7,4 +7,14 @@
 //
 
 #include <stdio.h>
+#include <stdlib.h>
 
+#include "Process.h"
+
+Process * Process_init(int stepCount, int requestCount, RequestType *requests) {
+    Process *proc = malloc(sizeof(Process));
+    proc->noSteps = stepCount;
+    proc->noRequests = requestCount;
+    proc->requests = requests;
+    return proc;
+}

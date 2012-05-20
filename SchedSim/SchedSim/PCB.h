@@ -11,15 +11,20 @@
 #ifndef SchedSim_PCB_h
 #define SchedSim_PCB_h
 
+#define PCB_STATE_RUNNING   0
+#define PCB_STATE_READY     1
+#define PCB_STATE_INT       2
+#define PCB_STATE_BLOCKED   3
+
 typedef struct {
 	int	pid;
-	int next_step;		// this is the step count that the CPU had gotten to when this process was prempted (like a PC register value)
+	int nextStep;		// this is the step count that the CPU had gotten to when this process was prempted (like a PC register value)
 	int state;			// e.g. 0=running, 1=ready, 2=interrupted, 3=blocked
-	Process proc;       // pointer to the actual process
-	int waiting_on;		// which queue is it in if it is waiting on something (blocked)
+	Process *proc;      // pointer to the actual process
+	int waitingOn;		// which queue is it in if it is waiting on something (blocked)
 	int owns;			// which mutex lock does it own
-    
-    // anything else you need
 } PCB;
+
+PCB * PCB_init(int, Process *);
 
 #endif

@@ -12,6 +12,7 @@
 		6548A631156974E9008D815C /* Scheduler.c in Sources */ = {isa = PBXBuildFile; fileRef = 6548A630156974E9008D815C /* Scheduler.c */; };
 		656C3719155AD788009C92A3 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 656C3718155AD788009C92A3 /* main.c */; };
 		656C371B155AD788009C92A3 /* SchedSim.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 656C371A155AD788009C92A3 /* SchedSim.1 */; };
+		65D151501569819900A02EDC /* PCB.c in Sources */ = {isa = PBXBuildFile; fileRef = 65D1514F1569819900A02EDC /* PCB.c */; };
 		65D4616D15656C9B0016BF9A /* CPU.c in Sources */ = {isa = PBXBuildFile; fileRef = 65D4616C15656C9B0016BF9A /* CPU.c */; };
 		65D461731565713C0016BF9A /* Process.c in Sources */ = {isa = PBXBuildFile; fileRef = 65D461721565713C0016BF9A /* Process.c */; };
 		65D46177156591A00016BF9A /* IODevice.c in Sources */ = {isa = PBXBuildFile; fileRef = 65D46176156591A00016BF9A /* IODevice.c */; };
@@ -42,6 +43,7 @@
 		656C3714155AD788009C92A3 /* SchedSim */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = SchedSim; sourceTree = BUILT_PRODUCTS_DIR; };
 		656C3718155AD788009C92A3 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		656C371A155AD788009C92A3 /* SchedSim.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = SchedSim.1; sourceTree = "<group>"; };
+		65D1514F1569819900A02EDC /* PCB.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = PCB.c; sourceTree = "<group>"; };
 		65D461681565662A0016BF9A /* Process.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Process.h; sourceTree = "<group>"; };
 		65D4616A1565668D0016BF9A /* PCB.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PCB.h; sourceTree = "<group>"; };
 		65D4616B156568420016BF9A /* CPU.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CPU.h; sourceTree = "<group>"; };
@@ -92,13 +94,13 @@
 		656C3717155AD788009C92A3 /* SchedSim */ = {
 			isa = PBXGroup;
 			children = (
-				E832148D1569782A002C55B2 /* SharedMem.c */,
-				E832149015697845002C55B2 /* SharedMem.h */,
 				656C3718155AD788009C92A3 /* main.c */,
 				656C371A155AD788009C92A3 /* SchedSim.1 */,
+				65D4617115656F510016BF9A /* RequestType.h */,
 				65D461681565662A0016BF9A /* Process.h */,
 				65D461721565713C0016BF9A /* Process.c */,
 				65D4616A1565668D0016BF9A /* PCB.h */,
+				65D1514F1569819900A02EDC /* PCB.c */,
 				65D4616B156568420016BF9A /* CPU.h */,
 				65D4616C15656C9B0016BF9A /* CPU.c */,
 				65D4616E15656D190016BF9A /* Scheduler.h */,
@@ -109,7 +111,8 @@
 				6548A62C15696818008D815C /* KBDDevice.c */,
 				65D4617015656DA80016BF9A /* SysTimer.h */,
 				6548A62E15697184008D815C /* SysTimer.c */,
-				65D4617115656F510016BF9A /* RequestType.h */,
+				E832149015697845002C55B2 /* SharedMem.h */,
+				E832148D1569782A002C55B2 /* SharedMem.c */,
 				65D461811565A49A0016BF9A /* Queues */,
 			);
 			path = SchedSim;
@@ -190,6 +193,7 @@
 				6548A62F15697184008D815C /* SysTimer.c in Sources */,
 				6548A631156974E9008D815C /* Scheduler.c in Sources */,
 				E832148E1569782A002C55B2 /* SharedMem.c in Sources */,
+				65D151501569819900A02EDC /* PCB.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

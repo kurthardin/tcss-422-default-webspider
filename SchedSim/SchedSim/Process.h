@@ -17,14 +17,14 @@
 //  two processes that require inter-process communications, such as a producer-consumer pair
 
 typedef struct {
-	int	no_steps;               // number of time steps before resetting to 0 - number of instructions
-	int no_requests;            // number of requests that will be generated during the process run
+	int	noSteps;               // number of time steps before resetting to 0 - number of instructions
+	int noRequests;            // number of requests that will be generated during the process run
 	RequestType *requests;		// An array of requests, each request (e.g. io service) is issued at a specific
                                 // time step. These are the synchronous events that result in traps being issued.
                                 // You can get fancy and make this an array of RequestTypeStr which contains the
                                 // step number when issued, and a request type (e.g. 0=io, 1=sync, etc.)
 } Process;
 
-Process* process_init();
+Process * Process_init();
 
 #endif
