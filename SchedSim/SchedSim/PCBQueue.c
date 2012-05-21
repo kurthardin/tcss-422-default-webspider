@@ -10,7 +10,7 @@
 
 #include "PCBQueue.h"
 
-PCBQueue* pcb_queue_init() {
+PCBQueue* PCBQueue_init() {
     return LinkedBlockingQueue_init();
 }
 
@@ -19,5 +19,9 @@ void PCBQueue_enqueue(PCBQueue* queue, PCB* pcb) {
 }
 
 PCB* PCBQueue_dequeue(PCBQueue* queue) {
-    return (PCB*) LinkedBlockingQueue_dequeue(queue);
+    return (PCB*) LinkedBlockingQueue_blockingDequeue(queue);
+}
+
+int PCBQueue_getSize(PCBQueue * queue) {
+    return LinkedBlockingQueue_getSize(queue);
 }

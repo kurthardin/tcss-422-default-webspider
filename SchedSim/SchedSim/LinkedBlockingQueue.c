@@ -21,9 +21,9 @@ LinkedBlockingQueue* LinkedBlockingQueue_init() {
     return queue;
 }
 
-void LinkedBlockingQueue_enqueue(LinkedBlockingQueue* queue, void* data) {
+void LinkedBlockingQueue_enqueue(LinkedBlockingQueue *queue, void *data) {
     
-    LinkedQueueNode* new_tail = LinkedQueueNode_init(data);
+    LinkedQueueNode *new_tail = LinkedQueueNode_init(data);
     
     pthread_mutex_lock(queue->mod_mutex);
     if (queue->head == NULL) {
@@ -40,17 +40,37 @@ void LinkedBlockingQueue_enqueue(LinkedBlockingQueue* queue, void* data) {
     pthread_cond_signal(queue->mod_sig);
 }
 
-void* LinkedBlockingQueue_dequeue(LinkedBlockingQueue* queue) {
+void * dequeue(LinkedBlockingQueue *queue) {
+    LinkedQueueNode* old_head = queue->head;
+    if (old_head != NULL) {
+        queue->head = old_head->next_node;
+        queue->size--;
+    }
+    return old_head != NULL ? old_head->data : NULL;
+}
+
+void * LinkedBlockingQueue_dequeue(LinkedBlockingQueue *queue) {
     
+    pthread_mutex_lock(queue->mod_mutex);
+    void *data = dequeue(queue);
+    pthread_mutex_unlock(queue->mod_mutex);
+    
+    return data;
+}
+
+void * LinkedBlockingQueue_blockingDequeue(LinkedBlockingQueue *queue) {
     pthread_mutex_lock(queue->mod_mutex);
     while (queue->head == NULL) {
         pthread_cond_wait(queue->mod_sig, queue->mod_mutex);
     }
-    
-    LinkedQueueNode* old_head = queue->head;
-    queue->head = old_head->next_node;
-    queue->size--;
+    void *data = dequeue(queue);
     pthread_mutex_unlock(queue->mod_mutex);
-    
-    return old_head->data;
+    return data;
+}
+
+int LinkedBlockingQueue_getSize(LinkedBlockingQueue *queue) {
+    pthread_mutex_lock(queue->mod_mutex);
+    int theSize = queue->size;
+    pthread_mutex_unlock(queue->mod_mutex);
+    return theSize;
 }

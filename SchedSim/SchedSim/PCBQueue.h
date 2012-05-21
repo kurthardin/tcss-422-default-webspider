@@ -14,8 +14,9 @@
 
 typedef LinkedBlockingQueue PCBQueue;
 
-PCBQueue* pcb_queue_init();
-void PCBQueue_enqueue(PCBQueue*, PCB*);
-PCB* PCBQueue_dequeue(PCBQueue*);
+PCBQueue* PCBQueue_init();
+void PCBQueue_enqueue(PCBQueue *, PCB *);
+PCB* PCBQueue_dequeue(PCBQueue *);
+int PCBQueue_getSize(PCBQueue *);
 
 #endif

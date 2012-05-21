@@ -22,7 +22,9 @@ typedef struct {
 } LinkedBlockingQueue;
 
 LinkedBlockingQueue* LinkedBlockingQueue_init();
-void LinkedBlockingQueue_enqueue(LinkedBlockingQueue*, void*);
-void* LinkedBlockingQueue_dequeue(LinkedBlockingQueue*);
+void LinkedBlockingQueue_enqueue(LinkedBlockingQueue *, void *);
+void* LinkedBlockingQueue_dequeue(LinkedBlockingQueue *);
+void* LinkedBlockingQueue_blockingDequeue(LinkedBlockingQueue *);
+int LinkedBlockingQueue_getSize(LinkedBlockingQueue *);
 
 #endif
