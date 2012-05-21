@@ -15,7 +15,7 @@
 #include "PCB.h"
 #include "PCBQueue.h"
 
-typedef struct {
+typedef struct IODevice {
     char *type;
     PCBQueue *blocked_queue;
     CPU *cpu;

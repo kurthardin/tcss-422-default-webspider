@@ -13,7 +13,7 @@
 
 #include "CPU.h"
 
-typedef struct {
+typedef struct KBDDevice {
     char key;
     CPU *cpu;
     pthread_t *tid;
