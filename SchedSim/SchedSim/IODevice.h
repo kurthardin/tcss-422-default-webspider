@@ -6,10 +6,10 @@
 //  Copyright (c) 2012 University of Washington at Tacoma. All rights reserved.
 //
 
-#include <pthread.h>
-
 #ifndef SchedSim_IODevice_h
 #define SchedSim_IODevice_h
+
+#include <pthread.h>
 
 #include "CPU.h"
 #include "PCB.h"

@@ -11,13 +11,13 @@
 #include "PCBQueue.h"
 
 PCBQueue* pcb_queue_init() {
-    return linked_blocking_queue_init();
+    return LinkedBlockingQueue_init();
 }
 
-void pcb_queue_enqueue(PCBQueue* queue, PCB* pcb) {
-    linked_blocking_queue_enqueue(queue, (void*) pcb);
+void PCBQueue_enqueue(PCBQueue* queue, PCB* pcb) {
+    LinkedBlockingQueue_enqueue(queue, (void*) pcb);
 }
 
-PCB* pcb_queue_dequeue(PCBQueue* queue) {
-    return (PCB*) linked_blocking_queue_dequeue(queue);
+PCB* PCBQueue_dequeue(PCBQueue* queue) {
+    return (PCB*) LinkedBlockingQueue_dequeue(queue);
 }

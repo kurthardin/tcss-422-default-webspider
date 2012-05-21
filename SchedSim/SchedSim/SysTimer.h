@@ -6,12 +6,12 @@
 //  Copyright (c) 2012 University of Washington at Tacoma. All rights reserved.
 //
 
+#ifndef SchedSim_SysTimer_h
+#define SchedSim_SysTimer_h
+
 #include <pthread.h>
 
 #include "CPU.h"
-
-#ifndef SchedSim_SysTimer_h
-#define SchedSim_SysTimer_h
 
 typedef struct {
     int delay;

@@ -6,10 +6,10 @@
 //  Copyright (c) 2012 University of Washington at Tacoma. All rights reserved.
 //
 
-#include "RequestType.h"
-
 #ifndef SchedSim_Process_h
 #define SchedSim_Process_h
+
+#include "RequestType.h"
 
 // List of processes:
 //  user interface process (e.g. one waiting for keyboard input)

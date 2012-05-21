@@ -6,14 +6,13 @@
 //  Copyright (c) 2012 University of Washington at Tacoma. All rights reserved.
 //
 
+#ifndef SchedSim_SharedMem_h
+#define SchedSim_SharedMem_h
+
 #import <pthread.h>
-#include <stdio.h>
 
 #include "PCB.h"
 #include "PCBQueue.h"
-
-#ifndef SchedSim_SharedMem_h
-#define SchedSim_SharedMem_h
 
 typedef struct {
     int data;

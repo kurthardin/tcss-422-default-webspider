@@ -6,10 +6,10 @@
 //  Copyright (c) 2012 University of Washington at Tacoma. All rights reserved.
 //
 
-#include <pthread.h>
-
 #ifndef SchedSim_KBDDevice_h
 #define SchedSim_KBDDevice_h
+
+#include <pthread.h>
 
 #include "CPU.h"
 

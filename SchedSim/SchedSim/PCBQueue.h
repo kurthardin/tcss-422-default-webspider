@@ -6,16 +6,16 @@
 //  Copyright (c) 2012 University of Washington at Tacoma. All rights reserved.
 //
 
-#include "LinkedBlockingQueue.h"
-#include "PCB.h"
-
 #ifndef SchedSim_PCBQueue_h
 #define SchedSim_PCBQueue_h
+
+#include "LinkedBlockingQueue.h"
+#include "PCB.h"
 
 typedef LinkedBlockingQueue PCBQueue;
 
 PCBQueue* pcb_queue_init();
-void pcb_queue_enqueue(PCBQueue*, PCB*);
-PCB* pcb_queue_dequeue(PCBQueue*);
+void PCBQueue_enqueue(PCBQueue*, PCB*);
+PCB* PCBQueue_dequeue(PCBQueue*);
 
 #endif

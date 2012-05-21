@@ -11,7 +11,7 @@
 
 #include "LinkedQueueNode.h"
 
-LinkedQueueNode* linked_queue_node_init(void* the_data) {
+LinkedQueueNode* LinkedQueueNode_init(void* the_data) {
     LinkedQueueNode* new_node = malloc(sizeof(LinkedQueueNode));
     new_node->data = the_data;
     new_node->next_node = NULL;

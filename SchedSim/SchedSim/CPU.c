@@ -23,7 +23,7 @@ CPU * CPU_init() {
     CPU *cpu = malloc(sizeof(CPU));
     int i;
     for (i = 0; i < 10; i++) {
-        cpu->interruptQueues[i] = linked_blocking_queue_init();
+        cpu->interruptQueues[i] = LinkedBlockingQueue_init();
     }
     cpu->scheduler = Scheduler_init(cpu);
     cpu->dvcDisk = IODevice_init("Disk", cpu);

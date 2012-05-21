@@ -21,8 +21,8 @@ typedef struct {
     pthread_cond_t* mod_sig;
 } LinkedBlockingQueue;
 
-LinkedBlockingQueue* linked_blocking_queue_init();
-void linked_blocking_queue_enqueue(LinkedBlockingQueue*, void*);
-void* linked_blocking_queue_dequeue(LinkedBlockingQueue*);
+LinkedBlockingQueue* LinkedBlockingQueue_init();
+void LinkedBlockingQueue_enqueue(LinkedBlockingQueue*, void*);
+void* LinkedBlockingQueue_dequeue(LinkedBlockingQueue*);
 
 #endif

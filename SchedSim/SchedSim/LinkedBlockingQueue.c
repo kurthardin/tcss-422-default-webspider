@@ -11,7 +11,7 @@
 
 #include "LinkedBlockingQueue.h"
 
-LinkedBlockingQueue* linked_blocking_queue_init() {
+LinkedBlockingQueue* LinkedBlockingQueue_init() {
     LinkedBlockingQueue* queue = malloc(sizeof(LinkedBlockingQueue));
     queue->head = NULL;
     queue->tail = NULL;
@@ -21,9 +21,9 @@ LinkedBlockingQueue* linked_blocking_queue_init() {
     return queue;
 }
 
-void linked_blocking_queue_enqueue(LinkedBlockingQueue* queue, void* data) {
+void LinkedBlockingQueue_enqueue(LinkedBlockingQueue* queue, void* data) {
     
-    LinkedQueueNode* new_tail = linked_queue_node_init(data);
+    LinkedQueueNode* new_tail = LinkedQueueNode_init(data);
     
     pthread_mutex_lock(queue->mod_mutex);
     if (queue->head == NULL) {
@@ -40,7 +40,7 @@ void linked_blocking_queue_enqueue(LinkedBlockingQueue* queue, void* data) {
     pthread_cond_signal(queue->mod_sig);
 }
 
-void* linked_blocking_queue_dequeue(LinkedBlockingQueue* queue) {
+void* LinkedBlockingQueue_dequeue(LinkedBlockingQueue* queue) {
     
     pthread_mutex_lock(queue->mod_mutex);
     while (queue->head == NULL) {

@@ -6,10 +6,10 @@
 //  Copyright (c) 2012 University of Washington at Tacoma. All rights reserved.
 //
 
-#include "Process.h"
-
 #ifndef SchedSim_PCB_h
 #define SchedSim_PCB_h
+
+#include "Process.h"
 
 #define PCB_STATE_RUNNING   0
 #define PCB_STATE_READY     1

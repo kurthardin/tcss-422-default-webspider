@@ -14,6 +14,6 @@ typedef struct LinkedQueueNode {
     struct LinkedQueueNode* next_node;
 } LinkedQueueNode;
 
-LinkedQueueNode* linked_queue_node_init(void*);
+LinkedQueueNode* LinkedQueueNode_init(void*);
 
 #endif
