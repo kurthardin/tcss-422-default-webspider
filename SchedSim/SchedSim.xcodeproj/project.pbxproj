@@ -40,6 +40,7 @@
 		6548A62C15696818008D815C /* KBDDevice.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = KBDDevice.c; sourceTree = "<group>"; };
 		6548A62E15697184008D815C /* SysTimer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = SysTimer.c; sourceTree = "<group>"; };
 		6548A630156974E9008D815C /* Scheduler.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Scheduler.c; sourceTree = "<group>"; };
+		65607D66156AA0A900C87F41 /* Defines.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Defines.h; sourceTree = "<group>"; };
 		656C3714155AD788009C92A3 /* SchedSim */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = SchedSim; sourceTree = BUILT_PRODUCTS_DIR; };
 		656C3718155AD788009C92A3 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		656C371A155AD788009C92A3 /* SchedSim.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = SchedSim.1; sourceTree = "<group>"; };
@@ -113,6 +114,7 @@
 				E832149015697845002C55B2 /* SharedMem.h */,
 				E832148D1569782A002C55B2 /* SharedMem.c */,
 				65D461811565A49A0016BF9A /* Queues */,
+				65607D66156AA0A900C87F41 /* Defines.h */,
 				656C371A155AD788009C92A3 /* SchedSim.1 */,
 			);
 			path = SchedSim;
