@@ -31,11 +31,13 @@ Interrupt Interrupt_make(int type/*, int priority*/, void *);
 #include "LinkedBlockingQueue.h"
 #include "SharedMem.h"
 
+struct Scheduler;
 struct IODevice;
 struct KBDDevice;
 
 typedef struct {
     LinkedBlockingQueue *interruptQueues[10];
+    struct Scheduler *scheduler;
     struct IODevice *dvcDisk;
     struct IODevice *dvcVid;
     struct KBDDevice *dvcKbd;

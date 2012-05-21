@@ -95,7 +95,6 @@
 			isa = PBXGroup;
 			children = (
 				656C3718155AD788009C92A3 /* main.c */,
-				656C371A155AD788009C92A3 /* SchedSim.1 */,
 				65D4617115656F510016BF9A /* RequestType.h */,
 				65D461681565662A0016BF9A /* Process.h */,
 				65D461721565713C0016BF9A /* Process.c */,
@@ -114,6 +113,7 @@
 				E832149015697845002C55B2 /* SharedMem.h */,
 				E832148D1569782A002C55B2 /* SharedMem.c */,
 				65D461811565A49A0016BF9A /* Queues */,
+				656C371A155AD788009C92A3 /* SchedSim.1 */,
 			);
 			path = SchedSim;
 			sourceTree = "<group>";

@@ -15,7 +15,7 @@
 
 #define MAX_PROCESSES   10
 
-typedef struct {
+typedef struct Scheduler {
     PCB *processList;
     PCBQueue *readyQueue;
 } Scheduler;
