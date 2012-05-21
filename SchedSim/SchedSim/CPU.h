@@ -25,23 +25,20 @@ Interrupt Interrupt_make(int type/*, int priority*/, void *);
 #endif
 
 
-
-
-
-
-#include "LinkedBlockingQueue.h"
-#include "IODevice.h"
-#include "KBDDevice.h"
-#include "SharedMem.h"
-
 #ifndef SchedSim_CPU_h
 #define SchedSim_CPU_h
 
+#include "LinkedBlockingQueue.h"
+#include "SharedMem.h"
+
+struct IODevice;
+struct KBDDevice;
+
 typedef struct {
     LinkedBlockingQueue *interruptQueues[10];
-    IODevice *dvcDisk;
-    IODevice *dvcVid;
-    KBDDevice *dvcKbd;
+    struct IODevice *dvcDisk;
+    struct IODevice *dvcVid;
+    struct KBDDevice *dvcKbd;
     SharedMemory *sharedMemory;
 } CPU;
 

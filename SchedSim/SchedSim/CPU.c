@@ -10,6 +10,8 @@
 #include <stdlib.h>
 
 #include "CPU.h"
+#include "IODevice.h"
+#include "KBDDevice.h"
 
 Interrupt Interrupt_make(int type, void *src) {
     Interrupt interrupt = {type, src};
