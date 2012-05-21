@@ -22,6 +22,6 @@ typedef struct Scheduler {
 
 Scheduler * Scheduler_init(CPU *);
 
-void Scheduler_schedule(Scheduler *, void *, int type);
+void Scheduler_schedule(Scheduler *, void *, int);
 
 #endif

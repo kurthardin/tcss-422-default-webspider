@@ -14,6 +14,10 @@
 Scheduler * Scheduler_init(CPU *cpu) {
     Scheduler *sched = malloc(sizeof(Scheduler));
     sched->processList = malloc(sizeof(PCB)*MAX_PROCESSES);
-    sched->readyQueue = pcb_queue_init();
+    sched->readyQueue = PCBQueue_init();
     return sched;
+}
+
+void Scheduler_schedule(Scheduler *scheduler, void *src, int type) {
+    // STUB
 }

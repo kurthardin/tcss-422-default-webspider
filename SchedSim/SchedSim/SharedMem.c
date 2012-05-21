@@ -14,7 +14,7 @@
 SharedMemory * SharedMemory_init() {
     SharedMemory* sharedMem = malloc(sizeof(SharedMemory));
     sharedMem->mutexOwner = NULL;
-    sharedMem->mutexBlockedQueue = pcb_queue_init();
+    sharedMem->mutexBlockedQueue = PCBQueue_init();
     return sharedMem;
 }
 
