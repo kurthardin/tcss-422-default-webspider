@@ -14,15 +14,20 @@
 #include "IODevice.h"
 #include "KBDDevice.h"
 
-Interrupt Interrupt_make(int type, void *src) {
-    Interrupt interrupt = {type, src};
+Interrupt * Interrupt_init(int type, void *src) {
+    Interrupt *interrupt = malloc(sizeof(Interrupt));
+    interrupt->type = type;
+    interrupt->src = src;
     return interrupt;
 }
+
+
+void checkForInterrupt(CPU *);
 
 CPU * CPU_init() {
     CPU *cpu = malloc(sizeof(CPU));
     int i;
-    for (i = 0; i < 10; i++) {
+    for (i = 0; i < INTERRUPT_PRIORITY_COUNT; i++) {
         cpu->interruptQueues[i] = LinkedBlockingQueue_init();
     }
     cpu->scheduler = Scheduler_init(cpu);
@@ -33,6 +38,25 @@ CPU * CPU_init() {
     return cpu;
 }
 
-void CPU_signalInterrupt(CPU *cpu, Interrupt interrupt) {
-    // STUB
+void CPU_signalInterrupt(CPU *cpu, Interrupt *interrupt) {
+    LinkedBlockingQueue_enqueue(cpu->interruptQueues[interrupt->type], interrupt);
+}
+
+void CPU_step(CPU *cpu) {
+    
+    // Do stuff...
+    
+    checkForInterrupt(cpu);
+}
+
+void checkForInterrupt(CPU *cpu) {
+    Interrupt *interrupt = NULL;
+    int i;
+    for (i = 0; i < INTERRUPT_PRIORITY_COUNT; i++) {
+        interrupt = LinkedBlockingQueue_dequeue(cpu->interruptQueues[i]);
+        if (interrupt != NULL) {
+            Scheduler_schedule(cpu->scheduler, interrupt->src, interrupt->type);
+            break;
+        }
+    }
 }
