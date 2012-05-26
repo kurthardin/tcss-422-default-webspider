@@ -17,7 +17,7 @@
 
 typedef struct IODevice {
     char *type;
-    PCBQueue *blocked_queue;
+    PCBQueue *blockedQueue;
     CPU *cpu;
     pthread_t *tid;
 } IODevice;

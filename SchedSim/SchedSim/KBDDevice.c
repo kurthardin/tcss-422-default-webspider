@@ -20,6 +20,8 @@ KBDDevice * KBDDevice_init(CPU *cpu) {
     KBDDevice *kbd = malloc(sizeof(KBDDevice));
     kbd->cpu = cpu;
     kbd->tid = malloc(sizeof(pthread_t));
+    kbd->inputBuffer = LinkedBlockingQueue_init();
+    kbd->blockedQueue = PCBQueue_init();
     isRunning = YES;
     pthread_create(kbd->tid, NULL, KBDDevice_run, kbd);
     return kbd;
@@ -28,8 +30,11 @@ KBDDevice * KBDDevice_init(CPU *cpu) {
 void * KBDDevice_run(void *arg) {
     KBDDevice *kbd = (KBDDevice *)arg;
     while (isRunning) {
-        kbd->key = getchar();
-        CPU_signalInterrupt(kbd->cpu, Interrupt_init(INTERRUPT_TYPE_KBD, kbd));
+        char key = getchar();
+        LinkedBlockingQueue_enqueue(kbd->inputBuffer, &key); 
+        if (PCBQueue_getSize(kbd->blockedQueue) > 0) {
+            CPU_signalInterrupt(kbd->cpu, Interrupt_init(INTERRUPT_TYPE_KBD, PCBQueue_dequeue(kbd->blockedQueue)));
+        }
     }
     return EXIT_SUCCESS;
 }

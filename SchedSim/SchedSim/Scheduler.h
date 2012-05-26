@@ -12,16 +12,22 @@
 #include "PCB.h"
 #include "PCBQueue.h"
 #include "CPU.h"
+#include "IODevice.h"
 
 #define MAX_PROCESSES   10
 
 typedef struct Scheduler {
-    PCB *processList;
+    CPU *cpu;
+    PCB **processList;
+    int processCount;
     PCBQueue *readyQueue;
 } Scheduler;
 
 Scheduler * Scheduler_init(CPU *);
 
-void Scheduler_schedule(Scheduler *, void *, int);
+void Scheduler_newProcess(Scheduler *, Process *);
+
+void Scheduler_handleSystemRequest(Scheduler *);
+void Scheduler_handleInterrupt(Scheduler *, PCB *, int);
 
 #endif

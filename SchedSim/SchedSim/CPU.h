@@ -6,10 +6,12 @@
 //  Copyright (c) 2012 University of Washington at Tacoma. All rights reserved.
 //
 
+#include "PCB.h"
+
 #ifndef SchedSim_Interrupt_h
 #define SchedSim_Interrupt_h
 
-#define INTERRUPT_PRIORITY_COUNT 3
+#define INTERRUPT_PRIORITY_COUNT 2
 
 #define INTERRUPT_TYPE_TIMER    0
 #define INTERRUPT_TYPE_IO       1
@@ -18,10 +20,10 @@
 
 typedef struct {
     int type;
-    void *src;
+    PCB *src;
 } Interrupt;
 
-Interrupt * Interrupt_init(int type, void *);
+Interrupt * Interrupt_init(int type, PCB *);
 
 #endif
 
@@ -39,6 +41,8 @@ struct IODevice;
 struct KBDDevice;
 
 typedef struct {
+    int ip;
+    PCB *runningProcess;
     LinkedBlockingQueue *interruptQueues[INTERRUPT_PRIORITY_COUNT];
     struct Scheduler *scheduler;
     struct IODevice *dvcDisk;
@@ -48,7 +52,11 @@ typedef struct {
     pthread_mutex_t* modMutex;
 } CPU;
 
+CPU * CPU_init();
+
 void CPU_signalInterrupt(CPU *, Interrupt *);
+void CPU_systemRequest(CPU *, int);
+
 void CPU_step(CPU *);
 
 #endif

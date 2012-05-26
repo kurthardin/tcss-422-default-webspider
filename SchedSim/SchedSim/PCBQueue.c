@@ -18,8 +18,16 @@ void PCBQueue_enqueue(PCBQueue* queue, PCB* pcb) {
     LinkedBlockingQueue_enqueue(queue, (void*) pcb);
 }
 
-PCB* PCBQueue_dequeue(PCBQueue* queue) {
+PCB* PCBQueue_blockingDequeue(PCBQueue* queue) {
     return (PCB*) LinkedBlockingQueue_blockingDequeue(queue);
+}
+
+PCB* PCBQueue_dequeue(PCBQueue* queue) {
+    return (PCB*) LinkedBlockingQueue_dequeue(queue);
+}
+
+PCB* PCBQueue_blockingPeek(PCBQueue *queue) {
+    return (PCB *) LinkedBlockingQueue_blockingPeek(queue);
 }
 
 int PCBQueue_getSize(PCBQueue * queue) {

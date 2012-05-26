@@ -16,7 +16,9 @@ LinkedBlockingQueue* LinkedBlockingQueue_init() {
     queue->head = NULL;
     queue->tail = NULL;
     queue->size = 0;
+    queue->mod_mutex = malloc(sizeof(pthread_mutex_t));
     pthread_mutex_init(queue->mod_mutex, NULL);
+    queue->mod_sig = malloc(sizeof(pthread_cond_t));
     pthread_cond_init(queue->mod_sig, NULL);
     return queue;
 }
@@ -64,6 +66,16 @@ void * LinkedBlockingQueue_blockingDequeue(LinkedBlockingQueue *queue) {
         pthread_cond_wait(queue->mod_sig, queue->mod_mutex);
     }
     void *data = dequeue(queue);
+    pthread_mutex_unlock(queue->mod_mutex);
+    return data;
+}
+
+void * LinkedBlockingQueue_blockingPeek(LinkedBlockingQueue *queue) {
+    pthread_mutex_lock(queue->mod_mutex);
+    while (queue->head == NULL) {
+        pthread_cond_wait(queue->mod_sig, queue->mod_mutex);
+    }
+    void *data = queue->head->data;
     pthread_mutex_unlock(queue->mod_mutex);
     return data;
 }

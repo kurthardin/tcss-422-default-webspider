@@ -29,7 +29,7 @@ void * SysTimer_run(void *arg) {
     
     while (1) {
         sleep(timer->delay);
-        CPU_signalInterrupt(timer->cpu, Interrupt_init(INTERRUPT_TYPE_TIMER, timer));
+        CPU_signalInterrupt(timer->cpu, Interrupt_init(INTERRUPT_TYPE_TIMER, NULL));
     }
     
     return EXIT_SUCCESS;

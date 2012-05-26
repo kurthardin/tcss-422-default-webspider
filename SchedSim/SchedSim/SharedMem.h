@@ -9,6 +9,9 @@
 #ifndef SchedSim_SharedMem_h
 #define SchedSim_SharedMem_h
 
+#define SHARED_MEM_MODE_READ    1
+#define SHARED_MEM_MODE_WRITE   2
+
 #import <pthread.h>
 
 #include "PCB.h"
@@ -16,13 +19,12 @@
 
 typedef struct {
     int data;
-    PCB *mutexOwner;
-    PCBQueue *mutexBlockedQueue;
+    int mode;
+    PCB *owner;
+    PCBQueue *mutexReadBlockedQueue;
+    PCBQueue *mutexWriteBlockedQueue;
 } SharedMemory;
 
 SharedMemory * SharedMemory_init();
-
-int SharedMemory_read(SharedMemory*);
-void SharedMemory_write(SharedMemory*, int);
 
 #endif

@@ -14,7 +14,8 @@
 #include "CPU.h"
 
 typedef struct KBDDevice {
-    char key;
+    LinkedBlockingQueue *inputBuffer;
+    PCBQueue *blockedQueue;
     CPU *cpu;
     pthread_t *tid;
 } KBDDevice;

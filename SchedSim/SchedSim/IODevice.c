@@ -18,7 +18,7 @@ void * IODevice_run(void *);
 IODevice * IODevice_init(char *type, CPU *cpu) {
     IODevice *device = malloc(sizeof(IODevice));
     device->type = type;
-    device->blocked_queue = PCBQueue_init();
+    device->blockedQueue = PCBQueue_init();
     device->cpu = cpu;
     device->tid = malloc(sizeof(pthread_t));
     pthread_create(device->tid, NULL, IODevice_run, device);
@@ -28,18 +28,19 @@ IODevice * IODevice_init(char *type, CPU *cpu) {
 void * IODevice_run(void *arg) {
     
     IODevice *device = (IODevice *)arg;
-    PCB *pcb = PCBQueue_dequeue(device->blocked_queue);
+    
+    PCB *pcb = PCBQueue_blockingPeek(device->blockedQueue);
     
     while (pcb != NULL) { // CAN THIS THREAD BE STOPPED WITH pthread_dettach?
         
-        printf("%s device running to service process %d", device->type, pcb->pid);
+        printf("%s device running to service process %d\n", device->type, pcb->pid);
         
         srand(time(NULL));
-        sleep(rand() % 5000);
+        sleep(rand() % 5);
         
-        CPU_signalInterrupt(device->cpu, Interrupt_init(INTERRUPT_TYPE_IO, device));
+        CPU_signalInterrupt(device->cpu, Interrupt_init(INTERRUPT_TYPE_IO, pcb));
         
-        pcb = PCBQueue_dequeue(device->blocked_queue);
+        pcb = PCBQueue_blockingDequeue(device->blockedQueue);
     }
     
     return EXIT_SUCCESS;

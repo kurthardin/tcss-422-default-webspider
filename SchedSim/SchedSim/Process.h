@@ -25,6 +25,6 @@ typedef struct {
                                 // step number when issued, and a request type (e.g. 0=io, 1=sync, etc.)
 } Process;
 
-Process * Process_init();
+Process * Process_init(int, int, RequestType *);
 
 #endif

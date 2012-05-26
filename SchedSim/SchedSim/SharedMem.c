@@ -13,19 +13,9 @@
 
 SharedMemory * SharedMemory_init() {
     SharedMemory* sharedMem = malloc(sizeof(SharedMemory));
-    sharedMem->mutexOwner = NULL;
-    sharedMem->mutexBlockedQueue = PCBQueue_init();
+    sharedMem->mode = SHARED_MEM_MODE_WRITE;
+    sharedMem->owner = NULL;
+    sharedMem->mutexReadBlockedQueue = PCBQueue_init();
+    sharedMem->mutexWriteBlockedQueue = PCBQueue_init();
     return sharedMem;
-}
-
-int SharedMemory_read(SharedMemory* sharedMemory) {
-    // TODO lock
-    return sharedMemory->data;
-    // TODO unlock
-}
-
-void SharedMemory_write(SharedMemory* sharedMemory, int new_data) {
-    // TODO lock
-    sharedMemory->data = new_data;
-    // TODO unlock
 }
