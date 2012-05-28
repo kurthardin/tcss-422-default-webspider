@@ -11,8 +11,9 @@
 #ifndef SchedSim_Interrupt_h
 #define SchedSim_Interrupt_h
 
-#define INTERRUPT_PRIORITY_COUNT 2
 #define NUMBER_SHARED_MEMORY     2
+
+#define INTERRUPT_PRIORITY_COUNT 3
 
 #define INTERRUPT_TYPE_TIMER     0
 #define INTERRUPT_TYPE_IO        1

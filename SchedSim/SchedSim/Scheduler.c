@@ -49,7 +49,6 @@ void moveToReadyQueue(Scheduler *scheduler, PCB *pcb) {
 
 void Scheduler_handleInterrupt(Scheduler *scheduler, PCB *src, int type) {
     PCB *runningPcb = scheduler->cpu->runningProcess;
-    PCB *unblockedPCB;
     char *key;
     switch (type) {
         case INTERRUPT_TYPE_TIMER:
@@ -60,15 +59,13 @@ void Scheduler_handleInterrupt(Scheduler *scheduler, PCB *src, int type) {
             
         case INTERRUPT_TYPE_KBD:
             key = LinkedBlockingQueue_dequeue(scheduler->cpu->dvcKbd->inputBuffer);
-            unblockedPCB = PCBQueue_dequeue(scheduler->cpu->dvcKbd->blockedQueue);
-            printf("Process %d: recieved character from keyboard (%c)\n", unblockedPCB->pid, *key);
-            moveToReadyQueue(scheduler, unblockedPCB);
+            printf("Process %d: recieved character from keyboard (%c)\n", src->pid, *key);
+            moveToReadyQueue(scheduler, src);
             break;
             
         case INTERRUPT_TYPE_IO:
-            unblockedPCB = src;
-            printf("Process %d: Unblocked by IO interrupt\n", unblockedPCB->pid);
-            moveToReadyQueue(scheduler, unblockedPCB);
+            printf("Process %d: Unblocked by IO interrupt\n", src->pid);
+            moveToReadyQueue(scheduler, src);
             break;
             
         default:
