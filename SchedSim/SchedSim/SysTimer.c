@@ -11,26 +11,30 @@
 #include <stdlib.h>
 
 #include "SysTimer.h"
+#include "Defines.h"
 
-void * SysTimer_run(void *);
-
-SysTimer * SysTimer_init(int delay, CPU *cpu) {
+SysTimer * SysTimer_init(int quanta, CPU *cpu) {
     SysTimer *timer = malloc(sizeof(SysTimer));
-    timer->delay = delay;
+    timer->counter = 0;
+    timer->quanta = quanta;
     timer->cpu = cpu;
-    timer->tid = malloc(sizeof(pthread_t));
-    pthread_create(timer->tid, NULL, SysTimer_run, timer);
+    timer->counterMutex = malloc(sizeof(pthread_mutex_t));
+    pthread_mutex_init(timer->counterMutex, NULL);
+    cpu->timer = (struct SysTimer *) timer;
     return timer;
 }
 
-void * SysTimer_run(void *arg) {
-    
-    SysTimer *timer = (SysTimer *)arg;
-    
-    while (1) {
-        sleep(timer->delay);
+void SysTimer_increment(SysTimer *timer) {
+    pthread_mutex_lock(timer->counterMutex);
+    timer->counter++;
+    if (timer->counter == timer->quanta) {
         CPU_signalInterrupt(timer->cpu, Interrupt_init(INTERRUPT_TYPE_TIMER, NULL));
     }
-    
-    return EXIT_SUCCESS;
+    pthread_mutex_unlock(timer->counterMutex);
+}
+
+void SysTimer_reset(SysTimer *timer) {
+    pthread_mutex_lock(timer->counterMutex);
+    timer->counter = 0;
+    pthread_mutex_unlock(timer->counterMutex);
 }

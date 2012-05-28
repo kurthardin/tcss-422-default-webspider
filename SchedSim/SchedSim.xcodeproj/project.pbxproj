@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		653DE6BC157319B30036F2B1 /* SysClock.c in Sources */ = {isa = PBXBuildFile; fileRef = 653DE6BB157319B30036F2B1 /* SysClock.c */; };
 		6548A62D15696818008D815C /* KBDDevice.c in Sources */ = {isa = PBXBuildFile; fileRef = 6548A62C15696818008D815C /* KBDDevice.c */; };
 		6548A62F15697184008D815C /* SysTimer.c in Sources */ = {isa = PBXBuildFile; fileRef = 6548A62E15697184008D815C /* SysTimer.c */; };
 		6548A631156974E9008D815C /* Scheduler.c in Sources */ = {isa = PBXBuildFile; fileRef = 6548A630156974E9008D815C /* Scheduler.c */; };
@@ -36,6 +37,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		653DE6B9157318690036F2B1 /* SysClock.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SysClock.h; sourceTree = "<group>"; };
+		653DE6BB157319B30036F2B1 /* SysClock.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = SysClock.c; sourceTree = "<group>"; };
 		6548A62A156967C5008D815C /* KBDDevice.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KBDDevice.h; sourceTree = "<group>"; };
 		6548A62C15696818008D815C /* KBDDevice.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = KBDDevice.c; sourceTree = "<group>"; };
 		6548A62E15697184008D815C /* SysTimer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = SysTimer.c; sourceTree = "<group>"; };
@@ -109,10 +112,12 @@
 				65D46176156591A00016BF9A /* IODevice.c */,
 				6548A62A156967C5008D815C /* KBDDevice.h */,
 				6548A62C15696818008D815C /* KBDDevice.c */,
-				65D4617015656DA80016BF9A /* SysTimer.h */,
-				6548A62E15697184008D815C /* SysTimer.c */,
 				E832149015697845002C55B2 /* SharedMem.h */,
 				E832148D1569782A002C55B2 /* SharedMem.c */,
+				65D4617015656DA80016BF9A /* SysTimer.h */,
+				6548A62E15697184008D815C /* SysTimer.c */,
+				653DE6B9157318690036F2B1 /* SysClock.h */,
+				653DE6BB157319B30036F2B1 /* SysClock.c */,
 				65D461811565A49A0016BF9A /* Queues */,
 				65607D66156AA0A900C87F41 /* Defines.h */,
 				656C371A155AD788009C92A3 /* SchedSim.1 */,
@@ -196,6 +201,7 @@
 				6548A631156974E9008D815C /* Scheduler.c in Sources */,
 				E832148E1569782A002C55B2 /* SharedMem.c in Sources */,
 				65D151501569819900A02EDC /* PCB.c in Sources */,
+				653DE6BC157319B30036F2B1 /* SysClock.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

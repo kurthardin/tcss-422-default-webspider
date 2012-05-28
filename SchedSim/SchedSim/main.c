@@ -10,10 +10,8 @@
 #include <time.h>
 #include <stdlib.h>
 
-
-#include "CPU.h"
 #include "Scheduler.h"
-#include "SysTimer.h"
+#include "SysClock.h"
 
 int main(int argc, const char * argv[]) {
     
@@ -49,13 +47,15 @@ int main(int argc, const char * argv[]) {
     Process *consProc = Process_init(consStepCount, consRequestCount, consRequests);
     Scheduler_newProcess(cpu->scheduler, consProc);
     
-    SysTimer_init(1, cpu);
+    SysTimer *timer = SysTimer_init(1000, cpu);
     
     cpu->runningProcess = PCBQueue_dequeue(cpu->scheduler->readyQueue);
     cpu->runningProcess->state = PCB_STATE_RUNNING;
     
+    SysClock *clock = SysClock_init(cpu, timer);
+    
     while (1) {
-        CPU_step(cpu);
+        // Run!  Could use field in SysClock to check if still running...
     }
     
     return 0;

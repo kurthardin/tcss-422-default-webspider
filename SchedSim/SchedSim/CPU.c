@@ -10,6 +10,7 @@
 #include <stdlib.h>
 
 #include "CPU.h"
+#include "SysTimer.h"
 #include "Scheduler.h"
 #include "IODevice.h"
 #include "KBDDevice.h"
@@ -29,6 +30,7 @@ CPU * CPU_init() {
     CPU *cpu = malloc(sizeof(CPU));
     cpu->ip = 0;
     cpu->runningProcess = NULL;
+    cpu->timer = NULL;
     int i;
     for (i = 0; i < INTERRUPT_PRIORITY_COUNT; i++) {
         cpu->interruptQueues[i] = LinkedBlockingQueue_init();

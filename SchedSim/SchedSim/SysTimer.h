@@ -14,11 +14,14 @@
 #include "CPU.h"
 
 typedef struct {
-    int delay;
+    int counter;
+    int quanta;
     CPU *cpu;
-    pthread_t *tid;
+    pthread_mutex_t* counterMutex;
 } SysTimer;
 
 SysTimer * SysTimer_init(int delay, CPU *);
+void SysTimer_increment(SysTimer *);
+void SysTimer_reset(SysTimer *);
 
 #endif

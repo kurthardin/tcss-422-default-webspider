@@ -36,6 +36,7 @@ Interrupt * Interrupt_init(int type, PCB *);
 #include "LinkedBlockingQueue.h"
 #include "SharedMem.h"
 
+struct SysTimer;
 struct Scheduler;
 struct IODevice;
 struct KBDDevice;
@@ -43,6 +44,7 @@ struct KBDDevice;
 typedef struct {
     int ip;
     PCB *runningProcess;
+    struct SysTimer *timer;
     LinkedBlockingQueue *interruptQueues[INTERRUPT_PRIORITY_COUNT];
     struct Scheduler *scheduler;
     struct IODevice *dvcDisk;

@@ -10,6 +10,7 @@
 #include <stdlib.h>
 
 #include "Scheduler.h"
+#include "SysTimer.h"
 #include "PCB.h"
 #include "KBDDevice.h"
 
@@ -87,4 +88,8 @@ void loadNextProcess(Scheduler *scheduler) {
         nextProcess->waitingOn = 0;
         printf("Process %d: Read from shared memory\n", nextProcess->pid);
     }
+    if (scheduler->cpu->timer != NULL) {
+        SysTimer_reset((SysTimer *)scheduler->cpu->timer);
+    }
+    
 }
