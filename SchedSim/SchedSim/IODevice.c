@@ -29,7 +29,7 @@ void * IODevice_run(void *arg) {
     
     IODevice *device = (IODevice *)arg;
     
-    PCB *pcb = PCBQueue_blockingPeek(device->blockedQueue);
+    PCB *pcb = PCBQueue_blockingDequeue(device->blockedQueue);
     
     while (pcb != NULL) { // CAN THIS THREAD BE STOPPED WITH pthread_dettach?
         
@@ -39,6 +39,8 @@ void * IODevice_run(void *arg) {
         sleep(rand() % 5);
         
         CPU_signalInterrupt(device->cpu, Interrupt_init(INTERRUPT_TYPE_IO, pcb));
+        
+        printf("%s device finished service for process %d\n", device->type, pcb->pid);
         
         pcb = PCBQueue_blockingDequeue(device->blockedQueue);
     }
