@@ -25,7 +25,7 @@ typedef struct Scheduler {
 
 Scheduler * Scheduler_init(CPU *);
 
-void Scheduler_newProcess(Scheduler *, Process *);
+void Scheduler_newProcess(Scheduler *, Process *, int);
 
 void Scheduler_handleSystemRequest(Scheduler *);
 void Scheduler_handleInterrupt(Scheduler *, PCB *, int);

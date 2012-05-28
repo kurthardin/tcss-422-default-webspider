@@ -25,9 +25,10 @@ Scheduler * Scheduler_init(CPU *cpu) {
     return sched;
 }
 
-void Scheduler_newProcess(Scheduler *scheduler, Process *proc) {
+void Scheduler_newProcess(Scheduler *scheduler, Process *proc, int index) {
     if (scheduler->processCount < MAX_PROCESSES) {
         PCB *newPcb = PCB_init(scheduler->processCount, proc);
+        newPcb->mem_ref = index;
         scheduler->processList[scheduler->processCount] = newPcb;
         scheduler->processCount++;
         PCBQueue_enqueue(scheduler->readyQueue, newPcb);

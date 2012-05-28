@@ -23,6 +23,7 @@ typedef struct {
 	Process *proc;      // pointer to the actual process
 	int waitingOn;		// which queue is it in if it is waiting on something (blocked)
 	int owns;			// which mutex lock does it own
+    int mem_ref;        // reference to which shared memory if needed
 } PCB;
 
 PCB * PCB_init(int, Process *);

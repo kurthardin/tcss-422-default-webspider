@@ -12,10 +12,11 @@
 #define SchedSim_Interrupt_h
 
 #define INTERRUPT_PRIORITY_COUNT 2
+#define NUMBER_SHARED_MEMORY     2
 
-#define INTERRUPT_TYPE_TIMER    0
-#define INTERRUPT_TYPE_IO       1
-#define INTERRUPT_TYPE_KBD      2
+#define INTERRUPT_TYPE_TIMER     0
+#define INTERRUPT_TYPE_IO        1
+#define INTERRUPT_TYPE_KBD       2
 // Add more as needed
 
 typedef struct {
@@ -50,7 +51,7 @@ typedef struct {
     struct IODevice *dvcDisk;
     struct IODevice *dvcVid;
     struct KBDDevice *dvcKbd;
-    SharedMemory *sharedMemory;
+    SharedMemory *sharedMemory[NUMBER_SHARED_MEMORY];
     pthread_mutex_t* modMutex;
 } CPU;
 

@@ -39,7 +39,11 @@ CPU * CPU_init() {
     cpu->dvcDisk = IODevice_init("Disk", cpu);
     cpu->dvcVid = IODevice_init("Video", cpu);
     cpu->dvcKbd = KBDDevice_init(cpu);
-    cpu->sharedMemory = SharedMemory_init();
+    
+    for (i = 0; i < NUMBER_SHARED_MEMORY; i++) {
+        cpu->sharedMemory[i] = SharedMemory_init();
+    }
+    
     return cpu;
 }
 
@@ -159,6 +163,7 @@ void handleSharedMemoryWrite(CPU *cpu, SharedMemory *sharedMemory) {
 }
 
 void CPU_systemRequest(CPU *cpu, int type) {
+    int index = cpu->runningProcess->mem_ref;
     switch (type) {
         
         case SYSTEM_REQUEST_TYPE_KBD:
@@ -171,11 +176,11 @@ void CPU_systemRequest(CPU *cpu, int type) {
             break;
             
         case SYSTEM_REQUEST_TYPE_READ_SHARED_MEM:
-            handleSharedMemoryRead(cpu, cpu->sharedMemory);
+            handleSharedMemoryRead(cpu, cpu->sharedMemory[index]);
             break;
             
         case SYSTEM_REQUEST_TYPE_WRITE_SHARED_MEM:
-            handleSharedMemoryWrite(cpu, cpu->sharedMemory);
+            handleSharedMemoryWrite(cpu, cpu->sharedMemory[index]);
             break;
             
         default:

@@ -21,10 +21,10 @@ int main(int argc, const char * argv[]) {
     
     RequestType kbdRequests[] = {{0,SYSTEM_REQUEST_TYPE_KBD}};
     Process *kbdProc = Process_init(1, 1, kbdRequests);
-    Scheduler_newProcess(cpu->scheduler, kbdProc);
+    Scheduler_newProcess(cpu->scheduler, kbdProc, -1);
     
     Process *bkgProc = Process_init(5000 + (rand() % 5000), 0, NULL);
-    Scheduler_newProcess(cpu->scheduler, bkgProc);
+    Scheduler_newProcess(cpu->scheduler, bkgProc, -1);
     
     int prodStepCount = rand() % 5000;
     int prodRequestCount = rand() % (prodStepCount / (10 + (rand() % 15)));
@@ -35,7 +35,7 @@ int main(int argc, const char * argv[]) {
         prodRequests[i] = request;
     }
     Process *prodProc = Process_init(prodStepCount, prodRequestCount, prodRequests);
-    Scheduler_newProcess(cpu->scheduler, prodProc);
+    Scheduler_newProcess(cpu->scheduler, prodProc, 0);
     
     int consStepCount = rand() % 5000;
     int consRequestCount = rand() % (consStepCount / (10 + (rand() % 15)));
@@ -45,7 +45,7 @@ int main(int argc, const char * argv[]) {
         consRequests[i] = request;
     }
     Process *consProc = Process_init(consStepCount, consRequestCount, consRequests);
-    Scheduler_newProcess(cpu->scheduler, consProc);
+    Scheduler_newProcess(cpu->scheduler, consProc, 0);
     
     SysTimer *timer = SysTimer_init(1000, cpu);
     
