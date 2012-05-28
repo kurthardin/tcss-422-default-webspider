@@ -11,6 +11,7 @@
 		6548A62D15696818008D815C /* KBDDevice.c in Sources */ = {isa = PBXBuildFile; fileRef = 6548A62C15696818008D815C /* KBDDevice.c */; };
 		6548A62F15697184008D815C /* SysTimer.c in Sources */ = {isa = PBXBuildFile; fileRef = 6548A62E15697184008D815C /* SysTimer.c */; };
 		6548A631156974E9008D815C /* Scheduler.c in Sources */ = {isa = PBXBuildFile; fileRef = 6548A630156974E9008D815C /* Scheduler.c */; };
+		6552706615743A3E0064E00E /* GUI.c in Sources */ = {isa = PBXBuildFile; fileRef = 6552706515743A3E0064E00E /* GUI.c */; };
 		656C3719155AD788009C92A3 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 656C3718155AD788009C92A3 /* main.c */; };
 		656C371B155AD788009C92A3 /* SchedSim.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 656C371A155AD788009C92A3 /* SchedSim.1 */; };
 		65D151501569819900A02EDC /* PCB.c in Sources */ = {isa = PBXBuildFile; fileRef = 65D1514F1569819900A02EDC /* PCB.c */; };
@@ -43,6 +44,8 @@
 		6548A62C15696818008D815C /* KBDDevice.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = KBDDevice.c; sourceTree = "<group>"; };
 		6548A62E15697184008D815C /* SysTimer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = SysTimer.c; sourceTree = "<group>"; };
 		6548A630156974E9008D815C /* Scheduler.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Scheduler.c; sourceTree = "<group>"; };
+		6552706315743A330064E00E /* GUI.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GUI.h; sourceTree = "<group>"; };
+		6552706515743A3E0064E00E /* GUI.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = GUI.c; sourceTree = "<group>"; };
 		65607D66156AA0A900C87F41 /* Defines.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Defines.h; sourceTree = "<group>"; };
 		656C3714155AD788009C92A3 /* SchedSim */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = SchedSim; sourceTree = BUILT_PRODUCTS_DIR; };
 		656C3718155AD788009C92A3 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
@@ -121,6 +124,8 @@
 				65D461811565A49A0016BF9A /* Queues */,
 				65607D66156AA0A900C87F41 /* Defines.h */,
 				656C371A155AD788009C92A3 /* SchedSim.1 */,
+				6552706315743A330064E00E /* GUI.h */,
+				6552706515743A3E0064E00E /* GUI.c */,
 			);
 			path = SchedSim;
 			sourceTree = "<group>";
@@ -202,6 +207,7 @@
 				E832148E1569782A002C55B2 /* SharedMem.c in Sources */,
 				65D151501569819900A02EDC /* PCB.c in Sources */,
 				653DE6BC157319B30036F2B1 /* SysClock.c in Sources */,
+				6552706615743A3E0064E00E /* GUI.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -258,6 +264,7 @@
 		656C371F155AD788009C92A3 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				OTHER_LDFLAGS = "-lncurses";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -265,6 +272,7 @@
 		656C3720155AD788009C92A3 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				OTHER_LDFLAGS = "-lncurses";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
