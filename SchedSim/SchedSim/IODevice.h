@@ -16,12 +16,12 @@
 #include "PCBQueue.h"
 
 typedef struct IODevice {
-    char *type;
+    int type;
     PCBQueue *blockedQueue;
     CPU *cpu;
     pthread_t *tid;
 } IODevice;
 
-IODevice * IODevice_init(char *, CPU *);
+IODevice * IODevice_init(int, CPU *);
 
 #endif

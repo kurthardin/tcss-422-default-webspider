@@ -45,38 +45,40 @@ void Scheduler_handleSystemRequest(Scheduler *scheduler) {
 void moveToReadyQueue(Scheduler *scheduler, PCB *pcb) {
     pcb->state = PCB_STATE_READY;
     PCBQueue_enqueue(scheduler->readyQueue, pcb);
-    char msg[150];
-    sprintf(msg, "Process %d: Added to ready queue", pcb->pid);
     SchedSimGUI_updateProcessWindow((SchedSimGUI *) scheduler->cpu->gui);
-    SchedSimGUI_printLogMessage((SchedSimGUI *) scheduler->cpu->gui, msg);
+    SchedSimGUI_printLogMessage((SchedSimGUI *) scheduler->cpu->gui, LOG_TYPE_PROC, pcb->pid, "added to ready queue");
 }
 
 void Scheduler_handleInterrupt(Scheduler *scheduler, PCB *src, int type) {
     PCB *runningPcb = scheduler->cpu->runningProcess;
     char *key;
     char msg[150];
+    int pid;
     switch (type) {
         case INTERRUPT_TYPE_TIMER:
-            sprintf(msg, "Process %d: Time slice up", runningPcb->pid);
+            sprintf(msg, "time slice up");
+            pid = runningPcb->pid;
             moveToReadyQueue(scheduler, runningPcb);
             loadNextProcess(scheduler);
             break;
             
         case INTERRUPT_TYPE_KBD:
             key = LinkedBlockingQueue_dequeue(scheduler->cpu->dvcKbd->inputBuffer);
-            sprintf(msg, "Process %d: recieved character from keyboard (%c)", src->pid, *key);
+            pid = src->pid;
+            sprintf(msg, "recieved character from keyboard (%c)", *key);
             moveToReadyQueue(scheduler, src);
             break;
             
         case INTERRUPT_TYPE_IO:
-            sprintf(msg, "Process %d: Unblocked by IO interrupt", src->pid);
+            sprintf(msg, "unblocked by IO interrupt");
+            pid = src->pid;
             moveToReadyQueue(scheduler, src);
             break;
             
         default:
             break;
     }
-    SchedSimGUI_printLogMessage((SchedSimGUI *) scheduler->cpu->gui, msg);
+    SchedSimGUI_printLogMessage((SchedSimGUI *) scheduler->cpu->gui, LOG_TYPE_PROC, pid, msg);
 }
 
 void loadNextProcess(Scheduler *scheduler) {
@@ -84,17 +86,14 @@ void loadNextProcess(Scheduler *scheduler) {
     scheduler->cpu->runningProcess = nextProcess;
     nextProcess->state = PCB_STATE_RUNNING;
     scheduler->cpu->ip = nextProcess->nextStep;
-    char msg[150];
-    sprintf(msg, "Process %d: Switched to running", nextProcess->pid);
-    SchedSimGUI_printLogMessage((SchedSimGUI *)scheduler->cpu->gui, msg);
+
+    SchedSimGUI_printLogMessage((SchedSimGUI *)scheduler->cpu->gui, LOG_TYPE_PROC, nextProcess->pid, "switched to running");
     if (nextProcess->waitingOn == SHARED_MEM_MODE_READ) {
         nextProcess->waitingOn = 0;
-        sprintf(msg, "Process %d: Read from shared memory", nextProcess->pid);
-        SchedSimGUI_printLogMessage((SchedSimGUI *)scheduler->cpu->gui, msg);
+        SchedSimGUI_printLogMessage((SchedSimGUI *)scheduler->cpu->gui, LOG_TYPE_PROC, nextProcess->pid, "read from shared memory");
     } else if (nextProcess->waitingOn == SHARED_MEM_MODE_WRITE) {
         nextProcess->waitingOn = 0;
-        sprintf(msg, "Process %d: Read from shared memory", nextProcess->pid);
-        SchedSimGUI_printLogMessage((SchedSimGUI *)scheduler->cpu->gui, msg);
+        SchedSimGUI_printLogMessage((SchedSimGUI *)scheduler->cpu->gui, LOG_TYPE_PROC, nextProcess->pid, "wrote to shared memory");
     }
     SchedSimGUI_updateProcessWindow((SchedSimGUI *) scheduler->cpu->gui);
     if (scheduler->cpu->timer != NULL) {

@@ -37,8 +37,8 @@ CPU * CPU_init() {
         cpu->interruptQueues[i] = LinkedBlockingQueue_init();
     }
     cpu->scheduler = Scheduler_init(cpu);
-    cpu->dvcDisk = IODevice_init("Disk", cpu);
-    cpu->dvcVid = IODevice_init("Video", cpu);
+    cpu->dvcDisk = IODevice_init(LOG_TYPE_DISK, cpu);
+    cpu->dvcVid = IODevice_init(LOG_TYPE_VID, cpu);
     cpu->dvcKbd = KBDDevice_init(cpu);
     
     for (i = 0; i < NUMBER_SHARED_MEMORY; i++) {
@@ -98,9 +98,7 @@ void handleKeyboardSystemRequest(CPU *cpu) {
     cpu->runningProcess->nextStep = cpu->ip;
     cpu->runningProcess->state = PCB_STATE_BLOCKED;
     PCBQueue_enqueue(cpu->dvcKbd->blockedQueue, cpu->runningProcess);
-    char msg[150];
-    sprintf(msg, "Process %d: blocked on keyboard request", cpu->runningProcess->pid);
-    SchedSimGUI_printLogMessage((SchedSimGUI *) cpu->gui, msg);
+    SchedSimGUI_printLogMessage((SchedSimGUI *) cpu->gui, LOG_TYPE_KBD, cpu->runningProcess->pid, "blocked on keyboard request");
 }
 
 void handleIOSystemRequest(CPU *cpu, int type) {
@@ -118,9 +116,7 @@ void handleIOSystemRequest(CPU *cpu, int type) {
     if (blockedQueue != NULL) {
         PCBQueue_enqueue(blockedQueue, cpu->runningProcess);
     }
-    char msg[150];
-    sprintf(msg, "Process %d: blocked on IO request (%s)", cpu->runningProcess->pid, ioType);
-    SchedSimGUI_printLogMessage((SchedSimGUI *) cpu->gui, msg);
+    SchedSimGUI_printLogMessage((SchedSimGUI *) cpu->gui, LOG_TYPE_PROC, cpu->runningProcess->pid, "blocked on IO request");
 }
 
 void handleSharedMemoryRead(CPU *cpu, SharedMemory *sharedMemory) {
@@ -129,27 +125,23 @@ void handleSharedMemoryRead(CPU *cpu, SharedMemory *sharedMemory) {
         PCBQueue_getSize(sharedMemory->mutexReadBlockedQueue) == 0) {
         
         sharedMemory->owner = cpu->runningProcess;
-        char msg[150];
-        sprintf(msg, "Process %d: Acquired mutex lock", sharedMemory->owner->pid);
-        SchedSimGUI_printLogMessage((SchedSimGUI *) cpu->gui, msg);
-        sprintf(msg, "Process %d: Read from shared memory", cpu->runningProcess->pid);
-        SchedSimGUI_printLogMessage((SchedSimGUI *) cpu->gui, msg);
+
+        SchedSimGUI_printLogMessage((SchedSimGUI *) cpu->gui, LOG_TYPE_PROC, cpu->runningProcess->pid, "acquired mutex lock");
+
+        SchedSimGUI_printLogMessage((SchedSimGUI *) cpu->gui, LOG_TYPE_PROC, cpu->runningProcess->pid, "read from shared memory");
         
         sharedMemory->owner = PCBQueue_dequeue(sharedMemory->mutexWriteBlockedQueue);
-        sprintf(msg, "Process %d: Released mutex lock", cpu->runningProcess->pid);
-        SchedSimGUI_printLogMessage((SchedSimGUI *) cpu->gui, msg);
+        
+        SchedSimGUI_printLogMessage((SchedSimGUI *) cpu->gui, LOG_TYPE_PROC, cpu->runningProcess->pid, "released mutex lock");
         
         if (sharedMemory->owner != NULL) {
-            sprintf(msg, "Process %d: Acquired mutex lock", sharedMemory->owner->pid);
-            SchedSimGUI_printLogMessage((SchedSimGUI *) cpu->gui, msg);
+            SchedSimGUI_printLogMessage((SchedSimGUI *) cpu->gui, LOG_TYPE_PROC, cpu->runningProcess->pid, "acquired mutex lock");
         }
     } else {
         PCBQueue_enqueue(sharedMemory->mutexReadBlockedQueue, cpu->runningProcess);
         cpu->runningProcess->state = PCB_STATE_BLOCKED;
         cpu->runningProcess->waitingOn = SHARED_MEM_MODE_READ;
-        char msg[150];
-        sprintf(msg, "Process %d: Blocked on shared memory mutex", cpu->runningProcess->pid);
-        SchedSimGUI_printLogMessage((SchedSimGUI *) cpu->gui, msg);
+        SchedSimGUI_printLogMessage((SchedSimGUI *) cpu->gui, LOG_TYPE_PROC, cpu->runningProcess->pid, "blocked on shared memory mutex");
     }
 }
 
@@ -159,27 +151,23 @@ void handleSharedMemoryWrite(CPU *cpu, SharedMemory *sharedMemory) {
         PCBQueue_getSize(sharedMemory->mutexWriteBlockedQueue) == 0) {
         
         sharedMemory->owner = cpu->runningProcess;
-        char msg[150];
-        sprintf(msg, "Process %d: Acquired mutex lock", sharedMemory->owner->pid);
-        SchedSimGUI_printLogMessage((SchedSimGUI *) cpu->gui, msg);
-        sprintf(msg, "Process %d: Wrote to shared memory", sharedMemory->owner->pid);
-        SchedSimGUI_printLogMessage((SchedSimGUI *) cpu->gui, msg);
+
+        SchedSimGUI_printLogMessage((SchedSimGUI *) cpu->gui, LOG_TYPE_PROC, sharedMemory->owner->pid, "acquired mutex lock");
+
+        SchedSimGUI_printLogMessage((SchedSimGUI *) cpu->gui, LOG_TYPE_PROC, sharedMemory->owner->pid, "wrote to shared memory");
         
         sharedMemory->owner = PCBQueue_dequeue(sharedMemory->mutexReadBlockedQueue);
-        sprintf(msg, "Process %d: Released mutex lock", cpu->runningProcess->pid);
-        SchedSimGUI_printLogMessage((SchedSimGUI *) cpu->gui, msg);
+        
+        SchedSimGUI_printLogMessage((SchedSimGUI *) cpu->gui, LOG_TYPE_PROC, sharedMemory->owner->pid, "released mutex lock");
         
         if (sharedMemory->owner != NULL) {
-            sprintf(msg, "Process %d: Acquired mutex lock", sharedMemory->owner->pid);
-            SchedSimGUI_printLogMessage((SchedSimGUI *) cpu->gui, msg);
+            SchedSimGUI_printLogMessage((SchedSimGUI *) cpu->gui, LOG_TYPE_PROC, sharedMemory->owner->pid, "acquired mutex lock");
         }
     } else {
         PCBQueue_enqueue(sharedMemory->mutexWriteBlockedQueue, cpu->runningProcess);
         cpu->runningProcess->state = PCB_STATE_BLOCKED;
         cpu->runningProcess->waitingOn = SHARED_MEM_MODE_WRITE;
-        char msg[150];
-        sprintf(msg, "Process %d: Blocked on shared memory mutex", cpu->runningProcess->pid);
-        SchedSimGUI_printLogMessage((SchedSimGUI *) cpu->gui, msg);
+        SchedSimGUI_printLogMessage((SchedSimGUI *) cpu->gui, LOG_TYPE_PROC, cpu->runningProcess->pid, "blocked on shared memory mutex");
     }
 }
 
