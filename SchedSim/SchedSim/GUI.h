@@ -14,6 +14,12 @@
 
 #include "CPU.h"
 
+#define LOG_TYPE_PROC   0
+#define LOG_TYPE_KBD    1
+#define LOG_TYPE_VID    2
+#define LOG_TYPE_DISK   3
+#define LOG_TYPE_MEM    4
+
 typedef struct {
     WINDOW* processWindow;
     WINDOW* deviceWindow;
@@ -26,6 +32,6 @@ SchedSimGUI * SchedSimGUI_init(CPU *);
 
 void SchedSimGUI_updateProcessWindow(SchedSimGUI *);
 void SchedSimGUI_updateDeviceWindow(SchedSimGUI *);
-void SchedSimGUI_printLogMessage(SchedSimGUI *, const char *);
+void SchedSimGUI_printLogMessage(SchedSimGUI *, int, int, const char *);
 
 #endif

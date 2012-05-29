@@ -237,10 +237,33 @@ void SchedSimGUI_updateDeviceWindow(SchedSimGUI *gui) {
     pthread_mutex_unlock(gui->updateMutex);
 }
 
-void SchedSimGUI_printLogMessage(SchedSimGUI *gui, const char *message) {
+void SchedSimGUI_printLogMessage(SchedSimGUI *gui, int logType, int id, const char *message) {
     pthread_mutex_lock(gui->updateMutex);
-    wprintw(gui->logWindow, "\n");
-    wprintw(gui->logWindow, message);
+    switch (logType) {
+        case LOG_TYPE_PROC:
+            wprintw(gui->logWindow, "\n[PRO %d] %s", id, message);
+            break;
+            
+        case LOG_TYPE_VID:
+            wprintw(gui->logWindow, "\n[VIDEO] %s", message);
+            break;
+            
+        case LOG_TYPE_DISK:
+            wprintw(gui->logWindow, "\n[DISK ] %s", message);
+            break;
+            
+        case LOG_TYPE_KBD:
+            wprintw(gui->logWindow, "\n[KEYBD] %s", message);
+            break;
+            
+        case LOG_TYPE_MEM:
+            wprintw(gui->logWindow, "\n[MEM %d] %s", id, message);
+            break;
+            
+        default:
+            break;
+    }
+    
     wrefresh(gui->logWindow);
     pthread_mutex_unlock(gui->updateMutex);
 }
