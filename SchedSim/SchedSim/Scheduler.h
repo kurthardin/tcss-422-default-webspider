@@ -29,5 +29,6 @@ void Scheduler_newProcess(Scheduler *, Process *, int);
 
 void Scheduler_handleSystemRequest(Scheduler *);
 void Scheduler_handleInterrupt(Scheduler *, PCB *, int);
+void Scheduler_unblockProcessWaitingOnSharedMemery(Scheduler *, int);
 
 #endif

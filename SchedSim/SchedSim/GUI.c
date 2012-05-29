@@ -110,8 +110,9 @@ SchedSimGUI * SchedSimGUI_init(CPU *cpu) {
     wprintw(gui->deviceWindow, "Keyboard\n");
     wprintw(gui->deviceWindow, "Video\n");
     wprintw(gui->deviceWindow, "Disk\n");
-    wprintw(gui->deviceWindow, "Shared mem 1\n");
-    wprintw(gui->deviceWindow, "Shared mem 2\n");
+    for (i = 0; i < 2; i++) {
+        wprintw(gui->deviceWindow, "Shared mem %d\n   read\n   write\n", i);
+    }
     
     wrefresh(gui->deviceWindow);
     
@@ -192,9 +193,13 @@ void SchedSimGUI_updateDeviceWindow(SchedSimGUI *gui) {
     pthread_mutex_lock(gui->updateMutex);
     
     PCBQueue *queue;
+    PCBQueue *queue2;
     
+    wmove(gui->deviceWindow, 2, 0);
     int i;
     for (i = 0; i < 5; i++) {
+        
+        queue2 = NULL;
         switch (i) {
             case 0:
                 queue = gui->cpu->dvcKbd->blockedQueue;
@@ -210,35 +215,63 @@ void SchedSimGUI_updateDeviceWindow(SchedSimGUI *gui) {
                 
             case 3:
                 queue = gui->cpu->sharedMemory[0]->mutexReadBlockedQueue;
-                // TODO writeblockedqueue
+                queue2 = gui->cpu->sharedMemory[0]->mutexWriteBlockedQueue;
                 break;
                 
             case 4:
                 queue = gui->cpu->sharedMemory[1]->mutexReadBlockedQueue;
-                // TODO
+                queue2 = gui->cpu->sharedMemory[1]->mutexWriteBlockedQueue;
                 break;
                 
             default:
                 break;
         }
         pthread_mutex_lock(queue->mod_mutex);
-        int size = PCBQueue_getSize(queue);
         
+        if (queue2 != NULL) {
+            wmove(gui->deviceWindow, getcury(gui->deviceWindow) + 1, DEVICE_BLOCKED_COL);
+            wprintw(gui->deviceWindow, "                                             ");
+            wmove(gui->deviceWindow, getcury(gui->deviceWindow) + 1, DEVICE_BLOCKED_COL);
+            wprintw(gui->deviceWindow, "                                             ");
+            wmove(gui->deviceWindow, getcury(gui->deviceWindow) - 1, DEVICE_BLOCKED_COL);
+        } else {
+            wmove(gui->deviceWindow, getcury(gui->deviceWindow), DEVICE_BLOCKED_COL);
+            wprintw(gui->deviceWindow, "                                             ");
+            wmove(gui->deviceWindow, getcury(gui->deviceWindow), DEVICE_BLOCKED_COL);
+        }
         LinkedQueueNode *node = queue->head;
         int j;
-        for (j = 0; j < size; j++) {
-            wmove(gui->deviceWindow, 1, DEVICE_BLOCKED_COL + (j * 5));
-            wprintw(gui->deviceWindow, "%d -> ", ((PCB *)node->data)->pid);
+        for (j = 0; j < queue->size; j++) {
+            if (j != 0) {
+                wprintw(gui->deviceWindow, " -> ");
+            }
+            wprintw(gui->deviceWindow, "%d", ((PCB *)node->data)->pid);
             node = node->next_node;
+        }
+        wmove(gui->deviceWindow, getcury(gui->deviceWindow) + 1, DEVICE_BLOCKED_COL);
+        
+        if (queue2 != NULL) {
+            node = queue2->head;
+            for (j = 0; j < queue2->size; j++) {
+                if (j != 0) {
+                    wprintw(gui->deviceWindow, " -> ");
+                }
+                wprintw(gui->deviceWindow, "%d", ((PCB *)node->data)->pid);
+                node = node->next_node;
+            }
+            wmove(gui->deviceWindow, getcury(gui->deviceWindow) + 1, DEVICE_BLOCKED_COL);
         }
         pthread_mutex_unlock(queue->mod_mutex);
     }
+    wrefresh(gui->deviceWindow);
     
     pthread_mutex_unlock(gui->updateMutex);
 }
 
 void SchedSimGUI_printLogMessage(SchedSimGUI *gui, int logType, int id, const char *message) {
     pthread_mutex_lock(gui->updateMutex);
+//    int logType = LOG_TYPE_PROC;
+//    int id = 0;
     switch (logType) {
         case LOG_TYPE_PROC:
             wprintw(gui->logWindow, "\n[PRO %d] %s", id, message);

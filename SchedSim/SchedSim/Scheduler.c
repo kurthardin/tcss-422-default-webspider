@@ -79,6 +79,7 @@ void Scheduler_handleInterrupt(Scheduler *scheduler, PCB *src, int type) {
             break;
     }
     SchedSimGUI_printLogMessage((SchedSimGUI *) scheduler->cpu->gui, LOG_TYPE_PROC, pid, msg);
+    SchedSimGUI_updateDeviceWindow((SchedSimGUI *) scheduler->cpu->gui);
 }
 
 void loadNextProcess(Scheduler *scheduler) {
@@ -90,14 +91,36 @@ void loadNextProcess(Scheduler *scheduler) {
     SchedSimGUI_printLogMessage((SchedSimGUI *)scheduler->cpu->gui, LOG_TYPE_PROC, nextProcess->pid, "switched to running");
     if (nextProcess->waitingOn == SHARED_MEM_MODE_READ) {
         nextProcess->waitingOn = 0;
-        SchedSimGUI_printLogMessage((SchedSimGUI *)scheduler->cpu->gui, LOG_TYPE_PROC, nextProcess->pid, "read from shared memory");
+        SchedSimGUI_printLogMessage((SchedSimGUI *) scheduler->cpu->gui, LOG_TYPE_PROC, nextProcess->pid, "acquired mutex lock");
+        SchedSimGUI_printLogMessage((SchedSimGUI *) scheduler->cpu->gui, LOG_TYPE_PROC, nextProcess->pid, "read from shared memory");
+        SchedSimGUI_printLogMessage((SchedSimGUI *) scheduler->cpu->gui, LOG_TYPE_PROC, nextProcess->pid, "released mutex lock");
+        Scheduler_unblockProcessWaitingOnSharedMemery(scheduler, nextProcess->mem_ref);
     } else if (nextProcess->waitingOn == SHARED_MEM_MODE_WRITE) {
         nextProcess->waitingOn = 0;
-        SchedSimGUI_printLogMessage((SchedSimGUI *)scheduler->cpu->gui, LOG_TYPE_PROC, nextProcess->pid, "wrote to shared memory");
+        SchedSimGUI_printLogMessage((SchedSimGUI *) scheduler->cpu->gui, LOG_TYPE_PROC, nextProcess->pid, "acquired mutex lock");
+        SchedSimGUI_printLogMessage((SchedSimGUI *) scheduler->cpu->gui, LOG_TYPE_PROC, nextProcess->pid, "wrote to shared memory");
+        SchedSimGUI_printLogMessage((SchedSimGUI *) scheduler->cpu->gui, LOG_TYPE_PROC, nextProcess->pid, "released mutex lock");
+        Scheduler_unblockProcessWaitingOnSharedMemery(scheduler, nextProcess->mem_ref);
     }
     SchedSimGUI_updateProcessWindow((SchedSimGUI *) scheduler->cpu->gui);
     if (scheduler->cpu->timer != NULL) {
         SysTimer_reset((SysTimer *)scheduler->cpu->timer);
     }
     
+}
+
+void Scheduler_unblockProcessWaitingOnSharedMemery(Scheduler * scheduler, int memRef) {
+    SharedMemory *sharedMemory = scheduler->cpu->sharedMemory[memRef];
+    if (sharedMemory->mode == SHARED_MEM_MODE_READ) {
+        sharedMemory->mode = SHARED_MEM_MODE_WRITE;
+        sharedMemory->owner = PCBQueue_dequeue(sharedMemory->mutexWriteBlockedQueue);
+    } else if (sharedMemory->mode == SHARED_MEM_MODE_WRITE) {
+        sharedMemory->mode = SHARED_MEM_MODE_READ;
+        sharedMemory->owner = PCBQueue_dequeue(sharedMemory->mutexReadBlockedQueue);
+    }
+    
+    if (sharedMemory->owner != NULL) {
+        sharedMemory->owner->mem_ref = memRef;
+        moveToReadyQueue(scheduler, sharedMemory->owner);
+    }
 }

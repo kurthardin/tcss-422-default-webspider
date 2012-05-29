@@ -105,38 +105,31 @@ void handleIOSystemRequest(CPU *cpu, int type) {
     cpu->runningProcess->nextStep = cpu->ip;
     cpu->runningProcess->state = PCB_STATE_BLOCKED;
     PCBQueue *blockedQueue = NULL;
-    char *ioType;
     if (type == SYSTEM_REQUEST_TYPE_IO_VID) {
         blockedQueue = cpu->dvcVid->blockedQueue;
-        ioType = cpu->dvcVid->type;
     } else if (type == SYSTEM_REQUEST_TYPE_IO_DISK) {
         blockedQueue = cpu->dvcDisk->blockedQueue;
-        ioType = cpu->dvcDisk->type;
     }
     if (blockedQueue != NULL) {
         PCBQueue_enqueue(blockedQueue, cpu->runningProcess);
     }
     SchedSimGUI_printLogMessage((SchedSimGUI *) cpu->gui, LOG_TYPE_PROC, cpu->runningProcess->pid, "blocked on IO request");
+    SchedSimGUI_updateDeviceWindow((SchedSimGUI *) cpu->gui);
 }
 
-void handleSharedMemoryRead(CPU *cpu, SharedMemory *sharedMemory) {
+void handleSharedMemoryRead(CPU *cpu, int memRef) {
     
+    SharedMemory *sharedMemory = cpu->sharedMemory[memRef];
     if (sharedMemory->mode == SHARED_MEM_MODE_READ && 
         PCBQueue_getSize(sharedMemory->mutexReadBlockedQueue) == 0) {
         
         sharedMemory->owner = cpu->runningProcess;
 
         SchedSimGUI_printLogMessage((SchedSimGUI *) cpu->gui, LOG_TYPE_PROC, cpu->runningProcess->pid, "acquired mutex lock");
-
         SchedSimGUI_printLogMessage((SchedSimGUI *) cpu->gui, LOG_TYPE_PROC, cpu->runningProcess->pid, "read from shared memory");
-        
-        sharedMemory->owner = PCBQueue_dequeue(sharedMemory->mutexWriteBlockedQueue);
-        
         SchedSimGUI_printLogMessage((SchedSimGUI *) cpu->gui, LOG_TYPE_PROC, cpu->runningProcess->pid, "released mutex lock");
         
-        if (sharedMemory->owner != NULL) {
-            SchedSimGUI_printLogMessage((SchedSimGUI *) cpu->gui, LOG_TYPE_PROC, cpu->runningProcess->pid, "acquired mutex lock");
-        }
+        Scheduler_unblockProcessWaitingOnSharedMemery(cpu->scheduler, memRef);
     } else {
         PCBQueue_enqueue(sharedMemory->mutexReadBlockedQueue, cpu->runningProcess);
         cpu->runningProcess->state = PCB_STATE_BLOCKED;
@@ -145,24 +138,18 @@ void handleSharedMemoryRead(CPU *cpu, SharedMemory *sharedMemory) {
     }
 }
 
-void handleSharedMemoryWrite(CPU *cpu, SharedMemory *sharedMemory) {
+void handleSharedMemoryWrite(CPU *cpu, int memRef) {
     
+    SharedMemory *sharedMemory = cpu->sharedMemory[memRef];
     if (sharedMemory->mode == SHARED_MEM_MODE_WRITE && 
         PCBQueue_getSize(sharedMemory->mutexWriteBlockedQueue) == 0) {
         
         sharedMemory->owner = cpu->runningProcess;
-
         SchedSimGUI_printLogMessage((SchedSimGUI *) cpu->gui, LOG_TYPE_PROC, sharedMemory->owner->pid, "acquired mutex lock");
-
         SchedSimGUI_printLogMessage((SchedSimGUI *) cpu->gui, LOG_TYPE_PROC, sharedMemory->owner->pid, "wrote to shared memory");
+        SchedSimGUI_printLogMessage((SchedSimGUI *) cpu->gui, LOG_TYPE_PROC, cpu->runningProcess->pid, "released mutex lock");
         
-        sharedMemory->owner = PCBQueue_dequeue(sharedMemory->mutexReadBlockedQueue);
-        
-        SchedSimGUI_printLogMessage((SchedSimGUI *) cpu->gui, LOG_TYPE_PROC, sharedMemory->owner->pid, "released mutex lock");
-        
-        if (sharedMemory->owner != NULL) {
-            SchedSimGUI_printLogMessage((SchedSimGUI *) cpu->gui, LOG_TYPE_PROC, sharedMemory->owner->pid, "acquired mutex lock");
-        }
+        Scheduler_unblockProcessWaitingOnSharedMemery(cpu->scheduler, memRef);
     } else {
         PCBQueue_enqueue(sharedMemory->mutexWriteBlockedQueue, cpu->runningProcess);
         cpu->runningProcess->state = PCB_STATE_BLOCKED;
@@ -185,11 +172,11 @@ void CPU_systemRequest(CPU *cpu, int type) {
             break;
             
         case SYSTEM_REQUEST_TYPE_READ_SHARED_MEM:
-            handleSharedMemoryRead(cpu, cpu->sharedMemory[index]);
+            handleSharedMemoryRead(cpu, index);
             break;
             
         case SYSTEM_REQUEST_TYPE_WRITE_SHARED_MEM:
-            handleSharedMemoryWrite(cpu, cpu->sharedMemory[index]);
+            handleSharedMemoryWrite(cpu, index);
             break;
             
         default:
