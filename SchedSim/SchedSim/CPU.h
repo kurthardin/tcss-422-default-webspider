@@ -42,6 +42,7 @@ struct SysTimer;
 struct Scheduler;
 struct IODevice;
 struct KBDDevice;
+struct SchedSimGUI;
 
 typedef struct {
     int ip;
@@ -54,6 +55,7 @@ typedef struct {
     struct KBDDevice *dvcKbd;
     SharedMemory *sharedMemory[NUMBER_SHARED_MEMORY];
     pthread_mutex_t* modMutex;
+    struct SchedSimGUI *gui;
 } CPU;
 
 CPU * CPU_init();

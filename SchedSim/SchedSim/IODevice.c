@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
+#include "GUI.h"
 
 #include "IODevice.h"
 
@@ -33,14 +34,17 @@ void * IODevice_run(void *arg) {
     
     while (pcb != NULL) { // CAN THIS THREAD BE STOPPED WITH pthread_dettach?
         
-        printf("%s device running to service process %d\n", device->type, pcb->pid);
+        char msg[150];
+        sprintf(msg, "%s device running to service process %d", device->type, pcb->pid);
+        SchedSimGUI_printLogMessage((SchedSimGUI *) device->cpu->gui, msg);
         
         srand(time(NULL));
         sleep(rand() % 5);
         
         CPU_signalInterrupt(device->cpu, Interrupt_init(INTERRUPT_TYPE_IO, pcb));
         
-        printf("%s device finished service for process %d\n", device->type, pcb->pid);
+        sprintf(msg, "%s device finished service for process %d", device->type, pcb->pid);
+        SchedSimGUI_printLogMessage((SchedSimGUI *) device->cpu->gui, msg);
         
         pcb = PCBQueue_blockingDequeue(device->blockedQueue);
     }

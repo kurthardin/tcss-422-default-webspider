@@ -10,15 +10,22 @@
 #define SchedSim_GUI_h
 
 #include <ncurses.h>
+#include <pthread.h>
 
 #include "CPU.h"
 
 typedef struct {
-    WINDOW* processStatusWindow;
-    WINDOW* deviceStatusWindow;
+    WINDOW* processWindow;
+    WINDOW* deviceWindow;
     WINDOW* logWindow;
+    CPU *cpu;
+    pthread_mutex_t *updateMutex;
 } SchedSimGUI;
 
 SchedSimGUI * SchedSimGUI_init(CPU *);
+
+void SchedSimGUI_updateProcessWindow(SchedSimGUI *);
+void SchedSimGUI_updateDeviceWindow(SchedSimGUI *);
+void SchedSimGUI_printLogMessage(SchedSimGUI *, const char *);
 
 #endif

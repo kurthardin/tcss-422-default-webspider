@@ -13,6 +13,7 @@
 #include "Scheduler.h"
 #include "SysClock.h"
 #include "KBDDevice.h"
+#include "GUI.h"
 
 void createProdConsPair(CPU *cpu, int sharedMemIndex) {
     int prodStepCount = rand() % 5000;
@@ -22,8 +23,6 @@ void createProdConsPair(CPU *cpu, int sharedMemIndex) {
     for (j = 0; j < prodRequestCount; j++) {
         RequestType request = {rand() % prodRequestCount, 3 + (rand() % 3)};
         prodRequests[j] = request;
-        RequestType *prodRequestsPtr = &prodRequests[j];
-        printf("RequestType-type: %d\n", prodRequestsPtr->type);
     }
     Process *prodProc = Process_init(prodStepCount, prodRequestCount, prodRequests);
     Scheduler_newProcess(cpu->scheduler, prodProc, sharedMemIndex);
@@ -40,7 +39,6 @@ void createProdConsPair(CPU *cpu, int sharedMemIndex) {
 }
 
 int main(int argc, const char * argv[]) {
-    
     
     int calcProcessCount = 2;
     int prodConsPairCount = 2;
@@ -65,50 +63,6 @@ int main(int argc, const char * argv[]) {
     for (i = 0; i < prodConsPairCount; i++) {
         createProdConsPair(cpu, i);
     }
-//    int prodStepCount = rand() % 5000;
-//    int prodRequestCount = rand() % (prodStepCount / (10 + (rand() % 15)));
-//    RequestType prodRequests[prodRequestCount];
-//    int j;
-//    for (j = 0; j < prodRequestCount; j++) {
-//        RequestType request = {rand() % prodRequestCount, 3 + (rand() % 3)};
-//        prodRequests[j] = request;
-//        RequestType *prodRequestsPtr = &prodRequests[j];
-//        printf("RequestType-type: %d\n", prodRequestsPtr->type);
-//    }
-//    Process *prodProc = Process_init(prodStepCount, prodRequestCount, prodRequests);
-//    Scheduler_newProcess(cpu->scheduler, prodProc, 0);
-//    
-//    int consStepCount = rand() % 5000;
-//    int consRequestCount = rand() % (consStepCount / (10 + (rand() % 15)));
-//    RequestType consRequests[consRequestCount];
-//    for (j = 0; j < consRequestCount; j++) {
-//        RequestType request = {rand() % consRequestCount, 2 + (rand() % 3)};
-//        consRequests[j] = request;
-//    }
-//    Process *consProc = Process_init(consStepCount, consRequestCount, consRequests);
-//    Scheduler_newProcess(cpu->scheduler, consProc, 0);
-//    
-//    prodStepCount = rand() % 5000;
-//    prodRequestCount = rand() % (prodStepCount / (10 + (rand() % 15)));
-//    RequestType prodRequests2[prodRequestCount];
-//    for (j = 0; j < prodRequestCount; j++) {
-//        RequestType request = {rand() % prodRequestCount, 3 + (rand() % 3)};
-//        prodRequests2[j] = request;
-//        RequestType *prodRequestsPtr = &prodRequests2[j];
-//        printf("RequestType-type: %d\n", prodRequestsPtr->type);
-//    }
-//    prodProc = Process_init(prodStepCount, prodRequestCount, prodRequests);
-//    Scheduler_newProcess(cpu->scheduler, prodProc, 1);
-//    
-//    consStepCount = rand() % 5000;
-//    consRequestCount = rand() % (consStepCount / (10 + (rand() % 15)));
-//    RequestType consRequests2[consRequestCount];
-//    for (j = 0; j < consRequestCount; j++) {
-//        RequestType request = {rand() % consRequestCount, 2 + (rand() % 3)};
-//        consRequests2[j] = request;
-//    }
-//    consProc = Process_init(consStepCount, consRequestCount, consRequests2);
-//    Scheduler_newProcess(cpu->scheduler, consProc, 1);
     
     SysTimer *timer = SysTimer_init(1000, cpu);
     
@@ -116,6 +70,8 @@ int main(int argc, const char * argv[]) {
     cpu->runningProcess->state = PCB_STATE_RUNNING;
     
     SysClock *clock = SysClock_init(cpu, timer);
+    
+    SchedSimGUI *gui = SchedSimGUI_init(cpu);
     
     while (1) {
         // Run!  Could use field in SysClock to check if still running...

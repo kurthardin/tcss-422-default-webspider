@@ -54,7 +54,7 @@
 		65D461681565662A0016BF9A /* Process.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Process.h; sourceTree = "<group>"; };
 		65D4616A1565668D0016BF9A /* PCB.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PCB.h; sourceTree = "<group>"; };
 		65D4616B156568420016BF9A /* CPU.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CPU.h; sourceTree = "<group>"; };
-		65D4616C15656C9B0016BF9A /* CPU.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = CPU.c; sourceTree = "<group>"; };
+		65D4616C15656C9B0016BF9A /* CPU.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; lineEnding = 0; path = CPU.c; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.c; };
 		65D4616E15656D190016BF9A /* Scheduler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Scheduler.h; sourceTree = "<group>"; };
 		65D4616F15656D770016BF9A /* IODevice.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IODevice.h; sourceTree = "<group>"; };
 		65D4617015656DA80016BF9A /* SysTimer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SysTimer.h; sourceTree = "<group>"; };

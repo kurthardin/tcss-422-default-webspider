@@ -14,11 +14,11 @@
 #define SchedSim_LinkedQueue_h
 
 typedef struct {
-    LinkedQueueNode* head;
-    LinkedQueueNode* tail;
+    LinkedQueueNode *head;
+    LinkedQueueNode *tail;
     int size;
-    pthread_mutex_t* mod_mutex;
-    pthread_cond_t* mod_sig;
+    pthread_mutex_t *mod_mutex;
+    pthread_cond_t *mod_sig;
 } LinkedBlockingQueue;
 
 LinkedBlockingQueue* LinkedBlockingQueue_init();
