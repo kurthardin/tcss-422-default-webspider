@@ -46,38 +46,44 @@ void moveToReadyQueue(Scheduler *scheduler, PCB *pcb) {
     pcb->state = PCB_STATE_READY;
     PCBQueue_enqueue(scheduler->readyQueue, pcb);
     SchedSimGUI_updateProcessWindow((SchedSimGUI *) scheduler->cpu->gui);
-    SchedSimGUI_printLogMessage((SchedSimGUI *) scheduler->cpu->gui, LOG_TYPE_PROC, pcb->pid, "added to ready queue");
+    SchedSimGUI_printLogMessage((SchedSimGUI *) scheduler->cpu->gui, 
+                                LOG_TYPE_PROC, 
+                                pcb->pid, 
+                                "added to ready queue");
 }
 
 void Scheduler_handleInterrupt(Scheduler *scheduler, PCB *src, int type) {
     PCB *runningPcb = scheduler->cpu->runningProcess;
-    char *msg;
-    int pid;
     switch (type) {
         case INTERRUPT_TYPE_TIMER:
-            pid = runningPcb->pid;
-            msg = "time slice up";
+            SchedSimGUI_printLogMessage((SchedSimGUI *) scheduler->cpu->gui, 
+                                        LOG_TYPE_PROC, 
+                                        runningPcb->pid, 
+                                        "time slice up");
             moveToReadyQueue(scheduler, runningPcb);
             loadNextProcess(scheduler);
             break;
             
         case INTERRUPT_TYPE_KBD:
             src->waitingOn = PCB_WAITING_ON_KEYBOARD_INPUT;
-            pid = src->pid;
-            msg = "unblocked by keyboard interrupt";
+            SchedSimGUI_printLogMessage((SchedSimGUI *) scheduler->cpu->gui, 
+                                        LOG_TYPE_PROC, 
+                                        src->pid, 
+                                        "unblocked by keyboard interrupt");
             moveToReadyQueue(scheduler, src);
             break;
             
         case INTERRUPT_TYPE_IO:
-            msg = "unblocked by IO interrupt";
-            pid = src->pid;
+            SchedSimGUI_printLogMessage((SchedSimGUI *) scheduler->cpu->gui, 
+                                        LOG_TYPE_PROC, 
+                                        src->pid, 
+                                        "unblocked by IO interrupt");
             moveToReadyQueue(scheduler, src);
             break;
             
         default:
             break;
     }
-    SchedSimGUI_printLogMessage((SchedSimGUI *) scheduler->cpu->gui, LOG_TYPE_PROC, pid, msg);
     SchedSimGUI_updateDeviceWindow((SchedSimGUI *) scheduler->cpu->gui);
 }
 
