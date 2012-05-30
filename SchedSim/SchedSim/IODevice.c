@@ -47,6 +47,10 @@ void * IODevice_run(void *arg) {
         SchedSimGUI_printLogMessage((SchedSimGUI *) device->cpu->gui, device->type, 0, msg);
         
         pcb = PCBQueue_blockingDequeue(device->blockedQueue);
+        
+        if (!CPU_isRunning(device->cpu)) {
+            break;
+        }
     }
     
     return EXIT_SUCCESS;

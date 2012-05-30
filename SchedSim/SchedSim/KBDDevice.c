@@ -12,8 +12,6 @@
 #include "Defines.h"
 #include "KBDDevice.h"
 
-boolean runKBDDevice = NO;
-
 void * KBDDevice_run(void *);
 
 KBDDevice * KBDDevice_init(CPU *cpu) {
@@ -22,7 +20,6 @@ KBDDevice * KBDDevice_init(CPU *cpu) {
     kbd->tid = malloc(sizeof(pthread_t));
     kbd->inputBuffer = LinkedBlockingQueue_init();
     kbd->blockedQueue = PCBQueue_init();
-    runKBDDevice = YES;
     pthread_create(kbd->tid, NULL, KBDDevice_run, kbd);
     return kbd;
 }
@@ -30,9 +27,13 @@ KBDDevice * KBDDevice_init(CPU *cpu) {
 void * KBDDevice_run(void *arg) {
     KBDDevice *kbd = (KBDDevice *)arg;
     char *key;
-    while (runKBDDevice) {
+    while (CPU_isRunning(kbd->cpu)) {
         key = malloc(sizeof(char));
         *key = getchar();
+        if (*key == 'q') {
+            CPU_setIsRunning(kbd->cpu, NO);
+            break;
+        }
         LinkedBlockingQueue_enqueue(kbd->inputBuffer, key); 
         if (PCBQueue_getSize(kbd->blockedQueue) > 0) {
             CPU_signalInterrupt(kbd->cpu, Interrupt_init(INTERRUPT_TYPE_KBD, PCBQueue_dequeue(kbd->blockedQueue)));

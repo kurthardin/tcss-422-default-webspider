@@ -13,8 +13,6 @@
 #include "SysClock.h"
 #include "Defines.h"
 
-boolean runSysClock = NO;
-
 void * SysClock_run(void *);
 
 SysClock * SysClock_init(CPU *cpu, SysTimer *timer) {
@@ -23,13 +21,12 @@ SysClock * SysClock_init(CPU *cpu, SysTimer *timer) {
     clock->timer = timer;
     clock->tid = malloc(sizeof(pthread_t));
     pthread_create(clock->tid, NULL, SysClock_run, clock);
-    runSysClock = YES;
     return clock;
 }
 
 void * SysClock_run(void *arg) {
     SysClock *clock = (SysClock *)arg;
-    while (runSysClock) {
+    while (CPU_isRunning(clock->cpu)) {
         CPU_step(clock->cpu);
         SysTimer_increment(clock->timer);
         usleep(1000);

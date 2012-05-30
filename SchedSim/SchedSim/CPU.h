@@ -37,6 +37,7 @@ Interrupt * Interrupt_init(int type, PCB *);
 
 #include "LinkedBlockingQueue.h"
 #include "SharedMem.h"
+#include "Defines.h"
 
 struct SysTimer;
 struct Scheduler;
@@ -54,16 +55,20 @@ typedef struct {
     struct IODevice *dvcVid;
     struct KBDDevice *dvcKbd;
     SharedMemory *sharedMemory[NUMBER_SHARED_MEMORY];
-    pthread_mutex_t* modMutex;
     struct SchedSimGUI *gui;
+    boolean isRunning;
+    pthread_mutex_t* modMutex;
 } CPU;
 
-CPU * CPU_init();
+CPU * CPU_init(void);
 
 void CPU_signalInterrupt(CPU *, Interrupt *);
 void CPU_systemRequest(CPU *, int);
 void CPU_getKeyFromKeyboard(CPU *);
 
 void CPU_step(CPU *);
+
+boolean CPU_isRunning(CPU *);
+void CPU_setIsRunning(CPU *, boolean);
 
 #endif

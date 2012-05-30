@@ -94,12 +94,8 @@ int main(int argc, const char * argv[]) {
     
     SysClock_init(cpu, timer);
     
-    while (1) {
-        // Run!  Could use field in SysClock to check if still running...
-//        
-//        char key = getchar();
-//        LinkedBlockingQueue_enqueue(cpu->dvcKbd->inputBuffer, &key);
-    }
+    while (CPU_isRunning(cpu));
+    endwin();
     
     return 0;
 }

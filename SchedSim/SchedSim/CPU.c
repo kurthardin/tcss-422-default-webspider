@@ -29,6 +29,9 @@ void checkForSystemRequest(CPU *, int);
 
 CPU * CPU_init() {
     CPU *cpu = malloc(sizeof(CPU));
+    cpu->isRunning = YES;
+    cpu->modMutex = malloc(sizeof(pthread_mutex_t));
+    pthread_mutex_init(cpu->modMutex, NULL);
     cpu->ip = 0;
     cpu->runningProcess = NULL;
     cpu->timer = NULL;
@@ -46,7 +49,6 @@ CPU * CPU_init() {
     }
     
     cpu->gui = (struct SchedSimGUI *) SchedSimGUI_init(cpu);
-    
     return cpu;
 }
 
@@ -197,4 +199,20 @@ void CPU_getKeyFromKeyboard(CPU *cpu) {
     sprintf(msg, "recieved character from keyboard (%c)", *key);
     free(key);
     SchedSimGUI_printLogMessage((SchedSimGUI *) cpu->gui, LOG_TYPE_PROC, cpu->runningProcess->pid, msg);
+}
+
+boolean CPU_isRunning(CPU *cpu) {
+    boolean result = NO;
+    pthread_mutex_lock(cpu->modMutex);
+    result = cpu->isRunning;
+    pthread_mutex_unlock(cpu->modMutex);
+    return result;
+}
+
+void CPU_setIsRunning(CPU *cpu, boolean shouldRun) {
+    pthread_mutex_lock(cpu->modMutex);
+    cpu->isRunning = shouldRun;
+    pthread_mutex_unlock(cpu->modMutex);
+    pthread_cond_signal(cpu->dvcVid->blockedQueue->mod_sig);
+    pthread_cond_signal(cpu->dvcDisk->blockedQueue->mod_sig);
 }
