@@ -44,15 +44,18 @@ void LinkedBlockingQueue_enqueue(LinkedBlockingQueue *queue, void *data) {
 
 void * dequeue(LinkedBlockingQueue *queue) {
     LinkedQueueNode* old_head = queue->head;
-    if (old_head != NULL) {
-        queue->head = old_head->next_node;
-        queue->size--;
-    }
     
     void *data = NULL;
     if (old_head != NULL) {
+        queue->head = old_head->next_node;
+        queue->size--;
+        
         data = old_head->data;
-        free(old_head);
+        // Freeing old_head breaks this function!
+//        old_head->data = NULL;
+//        old_head->next_node = NULL;
+//        free(old_head);
+//        old_head = NULL;
     }
     
     return data;
