@@ -19,11 +19,6 @@
 #define DEVICE_BLOCKED_COL  24
 
 SchedSimGUI * SchedSimGUI_init(CPU *cpu) {
-    SchedSimGUI *gui = (SchedSimGUI *) malloc(sizeof(SchedSimGUI));
-    
-    gui->cpu = cpu;
-    gui->updateMutex = malloc(sizeof(pthread_mutex_t));
-    pthread_mutex_init(gui->updateMutex, NULL);
     
     initscr();                  // Start curses mode
     if(has_colors()) {	
@@ -49,6 +44,12 @@ SchedSimGUI * SchedSimGUI_init(CPU *cpu) {
     int height = LINES * 0.5;
     
     
+    
+    SchedSimGUI *gui = (SchedSimGUI *) malloc(sizeof(SchedSimGUI));
+    
+    gui->cpu = cpu;
+    gui->updateMutex = malloc(sizeof(pthread_mutex_t));
+    pthread_mutex_init(gui->updateMutex, NULL);
     
     int processBorderWindowY = tbPadding;
     int processBorderWindowX = lrPadding;
