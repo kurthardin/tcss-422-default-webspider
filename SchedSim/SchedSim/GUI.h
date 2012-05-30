@@ -11,6 +11,7 @@
 
 #include <ncurses.h>
 #include <pthread.h>
+#include <stdio.h>
 
 #include "CPU.h"
 
@@ -25,6 +26,7 @@ typedef struct {
     WINDOW* deviceWindow;
     WINDOW* logWindow;
     CPU *cpu;
+    FILE *logFile;
     pthread_mutex_t *updateMutex;
 } SchedSimGUI;
 

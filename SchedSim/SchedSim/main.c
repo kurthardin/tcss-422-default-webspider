@@ -61,6 +61,8 @@ int main(int argc, const char * argv[]) {
     
     CPU *cpu = CPU_init();
     
+    SchedSimGUI_printLogMessage((SchedSimGUI *) cpu->gui, -1, -1, "Started SchedSim");
+    
     srand(time(NULL));
     
     // Initialize UI process
@@ -90,7 +92,7 @@ int main(int argc, const char * argv[]) {
     cpu->runningProcess = PCBQueue_dequeue(cpu->scheduler->readyQueue);
     cpu->runningProcess->state = PCB_STATE_RUNNING;
     
-    SysClock *clock = SysClock_init(cpu, timer);
+    SysClock_init(cpu, timer);
     
     while (1) {
         // Run!  Could use field in SysClock to check if still running...

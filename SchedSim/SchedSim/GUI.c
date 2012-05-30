@@ -48,6 +48,7 @@ SchedSimGUI * SchedSimGUI_init(CPU *cpu) {
     SchedSimGUI *gui = (SchedSimGUI *) malloc(sizeof(SchedSimGUI));
     
     gui->cpu = cpu;
+    gui->logFile = fopen("log.txt", "w");
     gui->updateMutex = malloc(sizeof(pthread_mutex_t));
     pthread_mutex_init(gui->updateMutex, NULL);
     
@@ -276,25 +277,32 @@ void SchedSimGUI_printLogMessage(SchedSimGUI *gui, int logType, int id, const ch
     switch (logType) {
         case LOG_TYPE_PROC:
             wprintw(gui->logWindow, "\n[PRO %d] %s", id, message);
+            fprintf(gui->logFile, "\n[PRO %d] %s", id, message);
             break;
             
         case LOG_TYPE_VID:
             wprintw(gui->logWindow, "\n[VIDEO] %s", message);
+            fprintf(gui->logFile, "\n[VIDEO] %s", message);
             break;
             
         case LOG_TYPE_DISK:
             wprintw(gui->logWindow, "\n[DISK ] %s", message);
+            fprintf(gui->logFile, "\n[DISK ] %s", message);
             break;
             
         case LOG_TYPE_KBD:
             wprintw(gui->logWindow, "\n[KEYBD] %s", message);
+            fprintf(gui->logFile, "\n[KEYBD] %s", message);
             break;
             
         case LOG_TYPE_MEM:
             wprintw(gui->logWindow, "\n[MEM %d] %s", id, message);
+            fprintf(gui->logFile, "\n[MEM %d] %s", id, message);
             break;
             
         default:
+            wprintw(gui->logWindow, "\n[SIM  ] %s", message);
+            fprintf(gui->logFile, "\n[SIM  ] %s", message);
             break;
     }
     
