@@ -27,7 +27,7 @@ Interrupt * Interrupt_init(int type, PCB *src) {
 void checkForInterrupt(CPU *);
 void checkForSystemRequest(CPU *, int);
 
-CPU * CPU_init() {
+CPU * CPU_init(int sharedMemCount) {
     CPU *cpu = malloc(sizeof(CPU));
     cpu->isRunning = YES;
     cpu->modMutex = malloc(sizeof(pthread_mutex_t));
@@ -44,7 +44,9 @@ CPU * CPU_init() {
     cpu->dvcVid = IODevice_init(LOG_TYPE_VID, cpu);
     cpu->dvcKbd = KBDDevice_init(cpu);
     
-    for (i = 0; i < NUMBER_SHARED_MEMORY; i++) {
+    cpu->sharedMemoryCount = sharedMemCount;
+    cpu->sharedMemory = malloc(sizeof(SharedMemory *) * sharedMemCount);
+    for (i = 0; i < sharedMemCount; i++) {
         cpu->sharedMemory[i] = SharedMemory_init();
     }
     
@@ -103,7 +105,7 @@ void handleKeyboardSystemRequest(CPU *cpu) {
         cpu->runningProcess->nextStep = cpu->ip;
         cpu->runningProcess->state = PCB_STATE_BLOCKED;
         PCBQueue_enqueue(cpu->dvcKbd->blockedQueue, cpu->runningProcess);
-        SchedSimGUI_printLogMessage((SchedSimGUI *) cpu->gui, LOG_TYPE_KBD, cpu->runningProcess->pid, "blocked on keyboard request");
+        SchedSimGUI_printLogMessage((SchedSimGUI *) cpu->gui, LOG_TYPE_PROC, cpu->runningProcess->pid, "blocked on keyboard request");
     }
 }
 
@@ -126,41 +128,40 @@ void handleIOSystemRequest(CPU *cpu, int type) {
 void handleSharedMemoryRead(CPU *cpu, int memRef) {
     
     SharedMemory *sharedMemory = cpu->sharedMemory[memRef];
+    
     if (sharedMemory->mode == SHARED_MEM_MODE_READ && 
         PCBQueue_getSize(sharedMemory->mutexReadBlockedQueue) == 0) {
         
         sharedMemory->owner = cpu->runningProcess;
-
-        SchedSimGUI_printLogMessage((SchedSimGUI *) cpu->gui, LOG_TYPE_PROC, cpu->runningProcess->pid, "acquired mutex lock");
-        SchedSimGUI_printLogMessage((SchedSimGUI *) cpu->gui, LOG_TYPE_PROC, cpu->runningProcess->pid, "read from shared memory");
-        SchedSimGUI_printLogMessage((SchedSimGUI *) cpu->gui, LOG_TYPE_PROC, cpu->runningProcess->pid, "released mutex lock");
-        
         Scheduler_unblockProcessWaitingOnSharedMemery(cpu->scheduler, memRef);
+        
     } else {
+        
         PCBQueue_enqueue(sharedMemory->mutexReadBlockedQueue, cpu->runningProcess);
         cpu->runningProcess->state = PCB_STATE_BLOCKED;
         cpu->runningProcess->waitingOn = PCB_WAITING_ON_SHARED_MEM_READ;
         SchedSimGUI_printLogMessage((SchedSimGUI *) cpu->gui, LOG_TYPE_PROC, cpu->runningProcess->pid, "blocked on shared memory mutex");
+        
     }
 }
 
 void handleSharedMemoryWrite(CPU *cpu, int memRef) {
     
     SharedMemory *sharedMemory = cpu->sharedMemory[memRef];
+    
     if (sharedMemory->mode == SHARED_MEM_MODE_WRITE && 
         PCBQueue_getSize(sharedMemory->mutexWriteBlockedQueue) == 0) {
         
         sharedMemory->owner = cpu->runningProcess;
-        SchedSimGUI_printLogMessage((SchedSimGUI *) cpu->gui, LOG_TYPE_PROC, sharedMemory->owner->pid, "acquired mutex lock");
-        SchedSimGUI_printLogMessage((SchedSimGUI *) cpu->gui, LOG_TYPE_PROC, sharedMemory->owner->pid, "wrote to shared memory");
-        SchedSimGUI_printLogMessage((SchedSimGUI *) cpu->gui, LOG_TYPE_PROC, cpu->runningProcess->pid, "released mutex lock");
-        
         Scheduler_unblockProcessWaitingOnSharedMemery(cpu->scheduler, memRef);
+        
     } else {
+        
         PCBQueue_enqueue(sharedMemory->mutexWriteBlockedQueue, cpu->runningProcess);
         cpu->runningProcess->state = PCB_STATE_BLOCKED;
         cpu->runningProcess->waitingOn = PCB_WAITING_ON_SHARED_MEM_WRITE;
         SchedSimGUI_printLogMessage((SchedSimGUI *) cpu->gui, LOG_TYPE_PROC, cpu->runningProcess->pid, "blocked on shared memory mutex");
+        
     }
 }
 
@@ -196,9 +197,9 @@ void CPU_systemRequest(CPU *cpu, int type) {
 void CPU_getKeyFromKeyboard(CPU *cpu) {
     char msg[150];
     char *key = LinkedBlockingQueue_dequeue(cpu->dvcKbd->inputBuffer);
-    sprintf(msg, "recieved character from keyboard (%c)", *key);
+    sprintf(msg, "process %d recieved character from keyboard (%c)", cpu->runningProcess->pid, *key);
     free(key);
-    SchedSimGUI_printLogMessage((SchedSimGUI *) cpu->gui, LOG_TYPE_PROC, cpu->runningProcess->pid, msg);
+    SchedSimGUI_printLogMessage((SchedSimGUI *) cpu->gui, LOG_TYPE_KBD, -1, msg);
 }
 
 boolean CPU_isRunning(CPU *cpu) {

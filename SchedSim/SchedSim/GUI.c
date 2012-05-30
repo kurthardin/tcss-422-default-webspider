@@ -14,9 +14,10 @@
 #include "KBDDevice.h"
 #include "LinkedQueueNode.h"
 
-#define PROCESS_STATE_COL   14
-#define PROCESS_PERCENT_COL 39
-#define DEVICE_BLOCKED_COL  24
+#define PROCESS_STATE_COL       14
+#define PROCESS_PERCENT_COL     39
+#define DEVICE_BLOCKED_COL      24
+#define READY_QUEUE_LABEL_ROW   15
 
 SchedSimGUI * SchedSimGUI_init(CPU *cpu) {
     
@@ -87,6 +88,9 @@ SchedSimGUI * SchedSimGUI_init(CPU *cpu) {
     }
     wattroff(gui->processWindow, COLOR_PAIR(5));
     
+    wmove(gui->processWindow, READY_QUEUE_LABEL_ROW, 0);
+    wprintw(gui->processWindow, "SCHEDULER READY QUEUE");
+    
     wrefresh(gui->processWindow);
     
     
@@ -113,8 +117,8 @@ SchedSimGUI * SchedSimGUI_init(CPU *cpu) {
     wprintw(gui->deviceWindow, "Keyboard\n");
     wprintw(gui->deviceWindow, "Video\n");
     wprintw(gui->deviceWindow, "Disk\n");
-    for (i = 0; i < 2; i++) {
-        wprintw(gui->deviceWindow, "Shared mem %d\n   read\n   write\n", i);
+    for (i = 0; i < cpu->sharedMemoryCount; i++) {
+        wprintw(gui->deviceWindow, "Shared Mem %d\n   read\n   write\n", i);
     }
     
     wrefresh(gui->deviceWindow);
@@ -139,6 +143,24 @@ SchedSimGUI * SchedSimGUI_init(CPU *cpu) {
     wrefresh(gui->logWindow);
     
     return gui;
+}
+
+void printQueue(WINDOW *window, PCBQueue *queue) {
+    int x = getcurx(window);
+    wmove(window, getcury(window), x);
+    wprintw(window, "                                                ");
+    wmove(window, getcury(window), x);
+    
+    LinkedQueueNode *node = queue->head;
+    int i;
+    for (i = 0; i < queue->size; i++) {
+        if (i != 0) {
+            wprintw(window, " -> ");
+        }
+        wprintw(window, "%d", ((PCB *)node->data)->pid);
+        node = node->next_node;
+    }
+    
 }
 
 void SchedSimGUI_updateProcessWindow(SchedSimGUI *gui) {
@@ -188,6 +210,10 @@ void SchedSimGUI_updateProcessWindow(SchedSimGUI *gui) {
                 break;
         }
     }
+    
+    wmove(gui->processWindow, READY_QUEUE_LABEL_ROW + 1, 0);
+    printQueue(gui->processWindow, gui->cpu->scheduler->readyQueue);
+    
     wrefresh(gui->processWindow);
     pthread_mutex_unlock(gui->updateMutex);    
 }
@@ -200,7 +226,7 @@ void SchedSimGUI_updateDeviceWindow(SchedSimGUI *gui) {
     
     wmove(gui->deviceWindow, 2, 0);
     int i;
-    for (i = 0; i < 5; i++) {
+    for (i = 0; i < 3 + gui->cpu->sharedMemoryCount; i++) {
         
         queue2 = NULL;
         switch (i) {
@@ -216,52 +242,23 @@ void SchedSimGUI_updateDeviceWindow(SchedSimGUI *gui) {
                 queue = gui->cpu->dvcDisk->blockedQueue;
                 break;
                 
-            case 3:
-                queue = gui->cpu->sharedMemory[0]->mutexReadBlockedQueue;
-                queue2 = gui->cpu->sharedMemory[0]->mutexWriteBlockedQueue;
-                break;
-                
-            case 4:
-                queue = gui->cpu->sharedMemory[1]->mutexReadBlockedQueue;
-                queue2 = gui->cpu->sharedMemory[1]->mutexWriteBlockedQueue;
-                break;
-                
             default:
+                queue = gui->cpu->sharedMemory[i-3]->mutexReadBlockedQueue;
+                queue2 = gui->cpu->sharedMemory[i-3]->mutexWriteBlockedQueue;
                 break;
         }
         pthread_mutex_lock(queue->mod_mutex);
         
         if (queue2 != NULL) {
             wmove(gui->deviceWindow, getcury(gui->deviceWindow) + 1, DEVICE_BLOCKED_COL);
-            wprintw(gui->deviceWindow, "                                             ");
-            wmove(gui->deviceWindow, getcury(gui->deviceWindow) + 1, DEVICE_BLOCKED_COL);
-            wprintw(gui->deviceWindow, "                                             ");
-            wmove(gui->deviceWindow, getcury(gui->deviceWindow) - 1, DEVICE_BLOCKED_COL);
         } else {
             wmove(gui->deviceWindow, getcury(gui->deviceWindow), DEVICE_BLOCKED_COL);
-            wprintw(gui->deviceWindow, "                                             ");
-            wmove(gui->deviceWindow, getcury(gui->deviceWindow), DEVICE_BLOCKED_COL);
         }
-        LinkedQueueNode *node = queue->head;
-        int j;
-        for (j = 0; j < queue->size; j++) {
-            if (j != 0) {
-                wprintw(gui->deviceWindow, " -> ");
-            }
-            wprintw(gui->deviceWindow, "%d", ((PCB *)node->data)->pid);
-            node = node->next_node;
-        }
+        printQueue(gui->deviceWindow, queue);
         wmove(gui->deviceWindow, getcury(gui->deviceWindow) + 1, DEVICE_BLOCKED_COL);
         
         if (queue2 != NULL) {
-            node = queue2->head;
-            for (j = 0; j < queue2->size; j++) {
-                if (j != 0) {
-                    wprintw(gui->deviceWindow, " -> ");
-                }
-                wprintw(gui->deviceWindow, "%d", ((PCB *)node->data)->pid);
-                node = node->next_node;
-            }
+            printQueue(gui->deviceWindow, queue2);
             wmove(gui->deviceWindow, getcury(gui->deviceWindow) + 1, DEVICE_BLOCKED_COL);
         }
         pthread_mutex_unlock(queue->mod_mutex);
@@ -273,39 +270,37 @@ void SchedSimGUI_updateDeviceWindow(SchedSimGUI *gui) {
 
 void SchedSimGUI_printLogMessage(SchedSimGUI *gui, int logType, int id, const char *message) {
     pthread_mutex_lock(gui->updateMutex);
-//    int logType = LOG_TYPE_PROC;
-//    int id = 0;
     switch (logType) {
         case LOG_TYPE_PROC:
             wprintw(gui->logWindow, "\n[PRO %d] %s", id, message);
-            fprintf(gui->logFile, "\n[PRO %d] %s", id, message);
+            fprintf(gui->logFile, "\n[PROC%d] %s", id, message);
             break;
             
         case LOG_TYPE_VID:
-            wattron(gui->logWindow, COLOR_PAIR(4));
+            wattron(gui->logWindow, COLOR_PAIR(6));
             wprintw(gui->logWindow, "\n[VIDEO] %s", message);
-            wattroff(gui->logWindow, COLOR_PAIR(4));
+            wattroff(gui->logWindow, COLOR_PAIR(6));
             fprintf(gui->logFile, "\n[VIDEO] %s", message);
             break;
             
         case LOG_TYPE_DISK:
-            wattron(gui->logWindow, COLOR_PAIR(6));
+            wattron(gui->logWindow, COLOR_PAIR(4));
             wprintw(gui->logWindow, "\n[DISK ] %s", message);
-            wattroff(gui->logWindow, COLOR_PAIR(6));
+            wattroff(gui->logWindow, COLOR_PAIR(4));
             fprintf(gui->logFile, "\n[DISK ] %s", message);
             break;
             
         case LOG_TYPE_KBD:
-            wattron(gui->logWindow, COLOR_PAIR(7));
+            wattron(gui->logWindow, COLOR_PAIR(3));
             wprintw(gui->logWindow, "\n[KEYBD] %s", message);
-            wattroff(gui->logWindow, COLOR_PAIR(7));
+            wattroff(gui->logWindow, COLOR_PAIR(3));
             fprintf(gui->logFile, "\n[KEYBD] %s", message);
             break;
             
         case LOG_TYPE_MEM:
-            wattron(gui->logWindow, COLOR_PAIR(3));
+            wattron(gui->logWindow, COLOR_PAIR(7));
             wprintw(gui->logWindow, "\n[MEM %d] %s", id, message);
-            wattroff(gui->logWindow, COLOR_PAIR(3));
+            wattroff(gui->logWindow, COLOR_PAIR(7));
             fprintf(gui->logFile, "\n[MEM %d] %s", id, message);
             break;
             

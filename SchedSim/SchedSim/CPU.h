@@ -11,8 +11,6 @@
 #ifndef SchedSim_Interrupt_h
 #define SchedSim_Interrupt_h
 
-#define NUMBER_SHARED_MEMORY     2
-
 #define INTERRUPT_PRIORITY_COUNT 3
 
 #define INTERRUPT_TYPE_TIMER     0
@@ -54,13 +52,14 @@ typedef struct {
     struct IODevice *dvcDisk;
     struct IODevice *dvcVid;
     struct KBDDevice *dvcKbd;
-    SharedMemory *sharedMemory[NUMBER_SHARED_MEMORY];
+    int sharedMemoryCount;
+    SharedMemory **sharedMemory;
     struct SchedSimGUI *gui;
     boolean isRunning;
     pthread_mutex_t* modMutex;
 } CPU;
 
-CPU * CPU_init(void);
+CPU * CPU_init(int);
 
 void CPU_signalInterrupt(CPU *, Interrupt *);
 void CPU_systemRequest(CPU *, int);

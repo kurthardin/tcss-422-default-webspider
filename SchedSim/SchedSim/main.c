@@ -62,9 +62,7 @@ void createProdConsPair(CPU *cpu, int sharedMemIndex) {
 
 int main(int argc, const char * argv[]) {
     
-//    getchar();
-    
-    int calcProcessCount = 1;
+    int calcProcessCount = 2;
     int ioBoundProcessCount = 3;
     int prodConsPairCount = 2;
     
@@ -104,7 +102,7 @@ int main(int argc, const char * argv[]) {
         }
     }
     
-    CPU *cpu = CPU_init();
+    CPU *cpu = CPU_init(prodConsPairCount);
     
     SchedSimGUI_printLogMessage((SchedSimGUI *) cpu->gui, -1, -1, "SchedSim started");
     
