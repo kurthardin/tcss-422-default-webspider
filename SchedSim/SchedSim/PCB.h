@@ -16,6 +16,11 @@
 #define PCB_STATE_INT       2
 #define PCB_STATE_BLOCKED   3
 
+#define PCB_WAITING_ON_NONE             0
+#define PCB_WAITING_ON_SHARED_MEM_READ  1
+#define PCB_WAITING_ON_SHARED_MEM_WRITE 2
+#define PCB_WAITING_ON_KEYBOARD_INPUT   3
+
 typedef struct {
 	int	pid;
 	int nextStep;		// this is the step count that the CPU had gotten to when this process was prempted (like a PC register value)

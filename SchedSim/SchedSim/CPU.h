@@ -62,6 +62,7 @@ CPU * CPU_init();
 
 void CPU_signalInterrupt(CPU *, Interrupt *);
 void CPU_systemRequest(CPU *, int);
+void CPU_getKeyFromKeyboard(CPU *);
 
 void CPU_step(CPU *);
 

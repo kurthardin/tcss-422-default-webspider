@@ -29,9 +29,11 @@ KBDDevice * KBDDevice_init(CPU *cpu) {
 
 void * KBDDevice_run(void *arg) {
     KBDDevice *kbd = (KBDDevice *)arg;
+    char *key;
     while (runKBDDevice) {
-        char key = getchar();
-        LinkedBlockingQueue_enqueue(kbd->inputBuffer, &key); 
+        key = malloc(sizeof(char));
+        *key = getchar();
+        LinkedBlockingQueue_enqueue(kbd->inputBuffer, key); 
         if (PCBQueue_getSize(kbd->blockedQueue) > 0) {
             CPU_signalInterrupt(kbd->cpu, Interrupt_init(INTERRUPT_TYPE_KBD, PCBQueue_dequeue(kbd->blockedQueue)));
         }

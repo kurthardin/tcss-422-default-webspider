@@ -95,10 +95,14 @@ void checkForSystemRequest(CPU *cpu, int ip) {
 }
 
 void handleKeyboardSystemRequest(CPU *cpu) {
-    cpu->runningProcess->nextStep = cpu->ip;
-    cpu->runningProcess->state = PCB_STATE_BLOCKED;
-    PCBQueue_enqueue(cpu->dvcKbd->blockedQueue, cpu->runningProcess);
-    SchedSimGUI_printLogMessage((SchedSimGUI *) cpu->gui, LOG_TYPE_KBD, cpu->runningProcess->pid, "blocked on keyboard request");
+    if (LinkedBlockingQueue_getSize(cpu->dvcKbd->inputBuffer) > 0) {
+        CPU_getKeyFromKeyboard(cpu);
+    } else {
+        cpu->runningProcess->nextStep = cpu->ip;
+        cpu->runningProcess->state = PCB_STATE_BLOCKED;
+        PCBQueue_enqueue(cpu->dvcKbd->blockedQueue, cpu->runningProcess);
+        SchedSimGUI_printLogMessage((SchedSimGUI *) cpu->gui, LOG_TYPE_KBD, cpu->runningProcess->pid, "blocked on keyboard request");
+    }
 }
 
 void handleIOSystemRequest(CPU *cpu, int type) {
@@ -133,7 +137,7 @@ void handleSharedMemoryRead(CPU *cpu, int memRef) {
     } else {
         PCBQueue_enqueue(sharedMemory->mutexReadBlockedQueue, cpu->runningProcess);
         cpu->runningProcess->state = PCB_STATE_BLOCKED;
-        cpu->runningProcess->waitingOn = SHARED_MEM_MODE_READ;
+        cpu->runningProcess->waitingOn = PCB_WAITING_ON_SHARED_MEM_READ;
         SchedSimGUI_printLogMessage((SchedSimGUI *) cpu->gui, LOG_TYPE_PROC, cpu->runningProcess->pid, "blocked on shared memory mutex");
     }
 }
@@ -153,7 +157,7 @@ void handleSharedMemoryWrite(CPU *cpu, int memRef) {
     } else {
         PCBQueue_enqueue(sharedMemory->mutexWriteBlockedQueue, cpu->runningProcess);
         cpu->runningProcess->state = PCB_STATE_BLOCKED;
-        cpu->runningProcess->waitingOn = SHARED_MEM_MODE_WRITE;
+        cpu->runningProcess->waitingOn = PCB_WAITING_ON_SHARED_MEM_WRITE;
         SchedSimGUI_printLogMessage((SchedSimGUI *) cpu->gui, LOG_TYPE_PROC, cpu->runningProcess->pid, "blocked on shared memory mutex");
     }
 }
@@ -185,4 +189,12 @@ void CPU_systemRequest(CPU *cpu, int type) {
     
     cpu->runningProcess->nextStep = cpu->ip;
     Scheduler_handleSystemRequest(cpu->scheduler);
+}
+
+void CPU_getKeyFromKeyboard(CPU *cpu) {
+    char msg[150];
+    char *key = LinkedBlockingQueue_dequeue(cpu->dvcKbd->inputBuffer);
+    sprintf(msg, "recieved character from keyboard (%c)", *key);
+    free(key);
+    SchedSimGUI_printLogMessage((SchedSimGUI *) cpu->gui, LOG_TYPE_PROC, cpu->runningProcess->pid, msg);
 }

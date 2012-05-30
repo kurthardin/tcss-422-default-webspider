@@ -51,26 +51,25 @@ void moveToReadyQueue(Scheduler *scheduler, PCB *pcb) {
 
 void Scheduler_handleInterrupt(Scheduler *scheduler, PCB *src, int type) {
     PCB *runningPcb = scheduler->cpu->runningProcess;
-    char *key;
-    char msg[150];
+    char *msg;
     int pid;
     switch (type) {
         case INTERRUPT_TYPE_TIMER:
-            sprintf(msg, "time slice up");
             pid = runningPcb->pid;
+            msg = "time slice up";
             moveToReadyQueue(scheduler, runningPcb);
             loadNextProcess(scheduler);
             break;
             
         case INTERRUPT_TYPE_KBD:
-            key = LinkedBlockingQueue_dequeue(scheduler->cpu->dvcKbd->inputBuffer);
+            src->waitingOn = PCB_WAITING_ON_KEYBOARD_INPUT;
             pid = src->pid;
-            sprintf(msg, "recieved character from keyboard (%c)", *key);
+            msg = "unblocked by keyboard interrupt";
             moveToReadyQueue(scheduler, src);
             break;
             
         case INTERRUPT_TYPE_IO:
-            sprintf(msg, "unblocked by IO interrupt");
+            msg = "unblocked by IO interrupt";
             pid = src->pid;
             moveToReadyQueue(scheduler, src);
             break;
@@ -87,21 +86,31 @@ void loadNextProcess(Scheduler *scheduler) {
     scheduler->cpu->runningProcess = nextProcess;
     nextProcess->state = PCB_STATE_RUNNING;
     scheduler->cpu->ip = nextProcess->nextStep;
-
+    
     SchedSimGUI_printLogMessage((SchedSimGUI *)scheduler->cpu->gui, LOG_TYPE_PROC, nextProcess->pid, "switched to running");
-    if (nextProcess->waitingOn == SHARED_MEM_MODE_READ) {
-        nextProcess->waitingOn = 0;
-        SchedSimGUI_printLogMessage((SchedSimGUI *) scheduler->cpu->gui, LOG_TYPE_PROC, nextProcess->pid, "acquired mutex lock");
-        SchedSimGUI_printLogMessage((SchedSimGUI *) scheduler->cpu->gui, LOG_TYPE_PROC, nextProcess->pid, "read from shared memory");
-        SchedSimGUI_printLogMessage((SchedSimGUI *) scheduler->cpu->gui, LOG_TYPE_PROC, nextProcess->pid, "released mutex lock");
-        Scheduler_unblockProcessWaitingOnSharedMemery(scheduler, nextProcess->mem_ref);
-    } else if (nextProcess->waitingOn == SHARED_MEM_MODE_WRITE) {
-        nextProcess->waitingOn = 0;
-        SchedSimGUI_printLogMessage((SchedSimGUI *) scheduler->cpu->gui, LOG_TYPE_PROC, nextProcess->pid, "acquired mutex lock");
-        SchedSimGUI_printLogMessage((SchedSimGUI *) scheduler->cpu->gui, LOG_TYPE_PROC, nextProcess->pid, "wrote to shared memory");
-        SchedSimGUI_printLogMessage((SchedSimGUI *) scheduler->cpu->gui, LOG_TYPE_PROC, nextProcess->pid, "released mutex lock");
-        Scheduler_unblockProcessWaitingOnSharedMemery(scheduler, nextProcess->mem_ref);
+    switch (nextProcess->waitingOn) {
+        case PCB_WAITING_ON_SHARED_MEM_READ:
+            SchedSimGUI_printLogMessage((SchedSimGUI *) scheduler->cpu->gui, LOG_TYPE_PROC, nextProcess->pid, "acquired mutex lock");
+            SchedSimGUI_printLogMessage((SchedSimGUI *) scheduler->cpu->gui, LOG_TYPE_PROC, nextProcess->pid, "read from shared memory");
+            SchedSimGUI_printLogMessage((SchedSimGUI *) scheduler->cpu->gui, LOG_TYPE_PROC, nextProcess->pid, "released mutex lock");
+            Scheduler_unblockProcessWaitingOnSharedMemery(scheduler, nextProcess->mem_ref);
+            break;
+            
+        case PCB_WAITING_ON_SHARED_MEM_WRITE:
+            SchedSimGUI_printLogMessage((SchedSimGUI *) scheduler->cpu->gui, LOG_TYPE_PROC, nextProcess->pid, "acquired mutex lock");
+            SchedSimGUI_printLogMessage((SchedSimGUI *) scheduler->cpu->gui, LOG_TYPE_PROC, nextProcess->pid, "wrote to shared memory");
+            SchedSimGUI_printLogMessage((SchedSimGUI *) scheduler->cpu->gui, LOG_TYPE_PROC, nextProcess->pid, "released mutex lock");
+            Scheduler_unblockProcessWaitingOnSharedMemery(scheduler, nextProcess->mem_ref);
+            break;
+            
+        case PCB_WAITING_ON_KEYBOARD_INPUT:
+            CPU_getKeyFromKeyboard(scheduler->cpu);
+            break;
+            
+        default:
+            break;
     }
+    nextProcess->waitingOn = PCB_WAITING_ON_NONE;
     SchedSimGUI_updateProcessWindow((SchedSimGUI *) scheduler->cpu->gui);
     if (scheduler->cpu->timer != NULL) {
         SysTimer_reset((SysTimer *)scheduler->cpu->timer);

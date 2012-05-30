@@ -18,7 +18,7 @@ PCB * PCB_init(int pid, Process *proc) {
     pcb->nextStep = 0;
     pcb->state = PCB_STATE_READY;
     pcb->owns = 0;
-    pcb->waitingOn = 0;
+    pcb->waitingOn = PCB_WAITING_ON_NONE;
     pcb->mem_ref = -1;
     return pcb;
 }
