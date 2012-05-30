@@ -17,7 +17,8 @@
 
 void createIOBoundProcess(CPU *cpu) {
     int stepCount = 1 + (rand() % 5000);
-    int ioRequestCount = 1 + (rand() % (stepCount / (10 + (rand() % 15))));
+    int ioMaxRequests = 1 + (stepCount / (10 + (rand() % 15)));
+    int ioRequestCount = 1 + (rand() % ioMaxRequests);
     RequestType *ioRequests = malloc(sizeof(RequestType) * ioRequestCount);
     int j;
     for (j = 0; j < ioRequestCount; j++) {
@@ -30,7 +31,8 @@ void createIOBoundProcess(CPU *cpu) {
 
 void createProdConsPair(CPU *cpu, int sharedMemIndex) {
     int prodStepCount = 1 + (rand() % 5000);
-    int prodRequestCount = 1 + (rand() % (prodStepCount / (10 + (rand() % 15))));
+    int prodMaxRequests = 1 + (prodStepCount / (10 + (rand() % 15)));
+    int prodRequestCount = 1 + (rand() % prodMaxRequests);
     RequestType *prodRequests = malloc(sizeof(RequestType) * prodRequestCount);
     int j;
     for (j = 0; j < prodRequestCount; j++) {
@@ -41,7 +43,8 @@ void createProdConsPair(CPU *cpu, int sharedMemIndex) {
     Scheduler_newProcess(cpu->scheduler, prodProc, sharedMemIndex);
     
     int consStepCount = 1 + (rand() % 5000);
-    int consRequestCount = 1 + (rand() % (consStepCount / (10 + (rand() % 15))));
+    int consMaxRequests = 1 + (consStepCount / (10 + (rand() % 15)));
+    int consRequestCount = 1 + (rand() % consMaxRequests);
     RequestType *consRequests = malloc(sizeof(RequestType) * consRequestCount);
     for (j = 0; j < consRequestCount; j++) {
         RequestType request = {rand() % consRequestCount, SYSTEM_REQUEST_TYPE_READ_SHARED_MEM /*2 + (rand() % 3)*/};
@@ -61,7 +64,7 @@ int main(int argc, const char * argv[]) {
     
     CPU *cpu = CPU_init();
     
-    SchedSimGUI_printLogMessage((SchedSimGUI *) cpu->gui, -1, -1, "Started SchedSim");
+    SchedSimGUI_printLogMessage((SchedSimGUI *) cpu->gui, -1, -1, "SchedSim started");
     
     srand(time(NULL));
     
@@ -95,6 +98,9 @@ int main(int argc, const char * argv[]) {
     SysClock_init(cpu, timer);
     
     while (CPU_isRunning(cpu));
+    
+    SchedSimGUI_printLogMessage((SchedSimGUI *) cpu->gui, -1, -1, "SchedSim stopped");
+    
     endwin();
     
     return 0;
