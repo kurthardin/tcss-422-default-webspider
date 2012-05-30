@@ -15,23 +15,36 @@
 #include "KBDDevice.h"
 #include "GUI.h"
 
+void createIOBoundProcess(CPU *cpu) {
+    int stepCount = 1 + (rand() % 5000);
+    int ioRequestCount = 1 + (rand() % (stepCount / (10 + (rand() % 15))));
+    RequestType *ioRequests = malloc(sizeof(RequestType) * ioRequestCount);
+    int j;
+    for (j = 0; j < ioRequestCount; j++) {
+        RequestType request = {rand() % ioRequestCount, 3 + (rand() % 2)};
+        ioRequests[j] = request;
+    }
+    Process *ioProc = Process_init(stepCount, ioRequestCount, ioRequests);
+    Scheduler_newProcess(cpu->scheduler, ioProc, -1);
+}
+
 void createProdConsPair(CPU *cpu, int sharedMemIndex) {
-    int prodStepCount = rand() % 5000;
-    int prodRequestCount = rand() % (prodStepCount / (10 + (rand() % 15)));
+    int prodStepCount = 1 + (rand() % 5000);
+    int prodRequestCount = 1 + (rand() % (prodStepCount / (10 + (rand() % 15))));
     RequestType *prodRequests = malloc(sizeof(RequestType) * prodRequestCount);
     int j;
     for (j = 0; j < prodRequestCount; j++) {
-        RequestType request = {rand() % prodRequestCount, 3 + (rand() % 3)};
+        RequestType request = {rand() % prodRequestCount, SYSTEM_REQUEST_TYPE_WRITE_SHARED_MEM /*3 + (rand() % 3)*/};
         prodRequests[j] = request;
     }
     Process *prodProc = Process_init(prodStepCount, prodRequestCount, prodRequests);
     Scheduler_newProcess(cpu->scheduler, prodProc, sharedMemIndex);
     
-    int consStepCount = rand() % 5000;
-    int consRequestCount = rand() % (consStepCount / (10 + (rand() % 15)));
+    int consStepCount = 1 + (rand() % 5000);
+    int consRequestCount = 1 + (rand() % (consStepCount / (10 + (rand() % 15))));
     RequestType *consRequests = malloc(sizeof(RequestType) * consRequestCount);
     for (j = 0; j < consRequestCount; j++) {
-        RequestType request = {rand() % consRequestCount, 2 + (rand() % 3)};
+        RequestType request = {rand() % consRequestCount, SYSTEM_REQUEST_TYPE_READ_SHARED_MEM /*2 + (rand() % 3)*/};
         consRequests[j] = request;
     }
     Process *consProc = Process_init(consStepCount, consRequestCount, consRequests);
@@ -40,7 +53,10 @@ void createProdConsPair(CPU *cpu, int sharedMemIndex) {
 
 int main(int argc, const char * argv[]) {
     
+//    getchar();
+    
     int calcProcessCount = 2;
+    int ioBoundProcessCount = 2;
     int prodConsPairCount = 2;
     
     CPU *cpu = CPU_init();
@@ -59,6 +75,11 @@ int main(int argc, const char * argv[]) {
         Scheduler_newProcess(cpu->scheduler, bkgProc, -1);
     }
     
+    // Initialize IO bound processes
+    for (i = 0; i < ioBoundProcessCount; i++) {
+        createIOBoundProcess(cpu);
+    }
+    
     // Initialize producer/consumer process pairs
     for (i = 0; i < prodConsPairCount; i++) {
         createProdConsPair(cpu, i);
@@ -70,8 +91,6 @@ int main(int argc, const char * argv[]) {
     cpu->runningProcess->state = PCB_STATE_RUNNING;
     
     SysClock *clock = SysClock_init(cpu, timer);
-    
-    SchedSimGUI *gui = SchedSimGUI_init(cpu);
     
     while (1) {
         // Run!  Could use field in SysClock to check if still running...
