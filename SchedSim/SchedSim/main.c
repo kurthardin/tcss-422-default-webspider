@@ -15,6 +15,12 @@
 #include "KBDDevice.h"
 #include "GUI.h"
 
+#define MAX_PROCESSES       10
+
+#define CALC_COUNT_ARG      1
+#define IO_COUNT_ARG        2
+#define PROD_CONS_COUNT_ARG 3
+
 void createIOBoundProcess(CPU *cpu) {
     int stepCount = 1 + (rand() % 5000);
     int ioMaxRequests = 1 + (stepCount / (10 + (rand() % 15)));
@@ -58,9 +64,45 @@ int main(int argc, const char * argv[]) {
     
 //    getchar();
     
-    int calcProcessCount = 2;
-    int ioBoundProcessCount = 2;
+    int calcProcessCount = 1;
+    int ioBoundProcessCount = 3;
     int prodConsPairCount = 2;
+    
+    int remainingProcessCount = MAX_PROCESSES - 1;
+    
+    int i;
+    for (i = 1; i < argc; i++) {
+        switch (i) {
+            case CALC_COUNT_ARG:
+                calcProcessCount = atoi(argv[i]);
+                if (calcProcessCount < 1) {
+                    calcProcessCount = 1;
+                } else if (calcProcessCount > remainingProcessCount) {
+                    calcProcessCount = remainingProcessCount;
+                }
+                remainingProcessCount -= calcProcessCount;
+                break;
+                
+            case IO_COUNT_ARG:
+                ioBoundProcessCount = atoi(argv[i]);
+                if (ioBoundProcessCount > remainingProcessCount) {
+                    ioBoundProcessCount = remainingProcessCount;
+                }
+                remainingProcessCount -= ioBoundProcessCount;
+                break;
+                
+            case PROD_CONS_COUNT_ARG:
+                prodConsPairCount = atoi(argv[i]);
+                if (prodConsPairCount * 2 > remainingProcessCount) {
+                    prodConsPairCount = remainingProcessCount / 2;
+                }
+                remainingProcessCount -= (prodConsPairCount * 2);
+                break;
+                
+            default:
+                break;
+        }
+    }
     
     CPU *cpu = CPU_init();
     
@@ -74,7 +116,6 @@ int main(int argc, const char * argv[]) {
     Scheduler_newProcess(cpu->scheduler, kbdProc, -1);
     
     // Initialize caluclation processes
-    int i;
     for (i = 0; i < calcProcessCount; i++) {
         Process *bkgProc = Process_init(5000 + (rand() % 5000), 0, NULL);
         Scheduler_newProcess(cpu->scheduler, bkgProc, -1);
