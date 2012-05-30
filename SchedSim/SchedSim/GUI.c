@@ -28,14 +28,15 @@ SchedSimGUI * SchedSimGUI_init(CPU *cpu) {
     noecho();
     curs_set(0);
     
-    init_pair(1, COLOR_BLACK, COLOR_BLUE);
+    init_pair(1, COLOR_WHITE, COLOR_BLUE);
     init_pair(2, COLOR_WHITE, COLOR_BLACK);
     init_pair(3, COLOR_GREEN, COLOR_BLACK);
     init_pair(4, COLOR_YELLOW, COLOR_BLACK);
     init_pair(5, COLOR_RED, COLOR_BLACK);
-    init_pair(6, COLOR_BLACK, COLOR_CYAN);
+    init_pair(6, COLOR_CYAN, COLOR_BLACK);
+    init_pair(7, COLOR_MAGENTA, COLOR_BLACK);
     
-    bkgd(COLOR_PAIR(1));
+    bkgd(COLOR_PAIR(2));
     refresh();
     
     int tbPadding = 1;
@@ -60,7 +61,7 @@ SchedSimGUI * SchedSimGUI_init(CPU *cpu) {
                                          processBorderWindowY, processBorderWindowX);
     wmove(processBorderWindow, 1, (processBorderWindowWidth * 0.5) - 7);
     wprintw(processBorderWindow, "PROCESS STATUS");
-    wbkgd(processBorderWindow, COLOR_PAIR(2));
+    wbkgd(processBorderWindow, COLOR_PAIR(1));
     wrefresh(processBorderWindow);
     
     gui->processWindow = newwin(processBorderWindowHeight - (2 * tbPadding) - 2, 
@@ -94,7 +95,7 @@ SchedSimGUI * SchedSimGUI_init(CPU *cpu) {
     int deviceBorderWindowHeight = height - tbPadding;
     int deviceBorderWindowWidth = processBorderWindowWidth;
     WINDOW* deviceBorderWindow = newwin(deviceBorderWindowHeight, deviceBorderWindowWidth, deviceBorderWindowY, deviceBorderWindowX);
-    wbkgd(deviceBorderWindow, COLOR_PAIR(2));
+    wbkgd(deviceBorderWindow, COLOR_PAIR(1));
     wmove(deviceBorderWindow, 1, (deviceBorderWindowWidth * 0.5) - 7);
     wprintw(deviceBorderWindow, "DEVICE STATUS");
     wrefresh(deviceBorderWindow);
@@ -126,7 +127,7 @@ SchedSimGUI * SchedSimGUI_init(CPU *cpu) {
     WINDOW* logBorderWindow = newwin(logBorderWindowHeight, logBorderWindowWidth, logBorderWindowY, logBorderWindowX);
     wmove(logBorderWindow, 1, (logBorderWindowWidth * 0.5) - 2);
     wprintw(logBorderWindow, "LOG");
-    wbkgd(logBorderWindow, COLOR_PAIR(2));
+    wbkgd(logBorderWindow, COLOR_PAIR(1));
     wrefresh(logBorderWindow);
     gui->logWindow = newwin(logBorderWindowHeight - (2 * tbPadding) - 2, 
                             logBorderWindowWidth - (2 * lrPadding), 
@@ -281,27 +282,37 @@ void SchedSimGUI_printLogMessage(SchedSimGUI *gui, int logType, int id, const ch
             break;
             
         case LOG_TYPE_VID:
+            wattron(gui->logWindow, COLOR_PAIR(4));
             wprintw(gui->logWindow, "\n[VIDEO] %s", message);
+            wattroff(gui->logWindow, COLOR_PAIR(4));
             fprintf(gui->logFile, "\n[VIDEO] %s", message);
             break;
             
         case LOG_TYPE_DISK:
+            wattron(gui->logWindow, COLOR_PAIR(6));
             wprintw(gui->logWindow, "\n[DISK ] %s", message);
+            wattroff(gui->logWindow, COLOR_PAIR(6));
             fprintf(gui->logFile, "\n[DISK ] %s", message);
             break;
             
         case LOG_TYPE_KBD:
+            wattron(gui->logWindow, COLOR_PAIR(7));
             wprintw(gui->logWindow, "\n[KEYBD] %s", message);
+            wattroff(gui->logWindow, COLOR_PAIR(7));
             fprintf(gui->logFile, "\n[KEYBD] %s", message);
             break;
             
         case LOG_TYPE_MEM:
+            wattron(gui->logWindow, COLOR_PAIR(3));
             wprintw(gui->logWindow, "\n[MEM %d] %s", id, message);
+            wattroff(gui->logWindow, COLOR_PAIR(3));
             fprintf(gui->logFile, "\n[MEM %d] %s", id, message);
             break;
             
         default:
+            wattron(gui->logWindow, COLOR_PAIR(5));
             wprintw(gui->logWindow, "\n[SIM  ] %s", message);
+            wattroff(gui->logWindow, COLOR_PAIR(5));
             fprintf(gui->logFile, "\n[SIM  ] %s", message);
             break;
     }
