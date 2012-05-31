@@ -68,8 +68,9 @@ void CPU_step(CPU *cpu) {
     if (cpu->ip > cpu->runningProcess->proc->noSteps - 1) {
         cpu->ip = 0;
     }
+    cpu->runningProcess->nextStep = cpu->ip;
     checkForSystemRequest(cpu, ip);
-    
+    SchedSimGUI_updateProcessWindow((SchedSimGUI *) cpu->gui);
 }
 
 void checkForInterrupt(CPU *cpu) {
@@ -122,7 +123,6 @@ void handleIOSystemRequest(CPU *cpu, int type) {
         PCBQueue_enqueue(blockedQueue, cpu->runningProcess);
     }
     SchedSimGUI_printLogMessage((SchedSimGUI *) cpu->gui, LOG_TYPE_PROC, cpu->runningProcess->pid, "blocked on IO request");
-    SchedSimGUI_updateDeviceWindow((SchedSimGUI *) cpu->gui);
 }
 
 void handleSharedMemoryRead(CPU *cpu, int memRef) {
@@ -189,6 +189,8 @@ void CPU_systemRequest(CPU *cpu, int type) {
         default:
             break;
     }
+    
+    SchedSimGUI_updateDeviceWindow((SchedSimGUI *) cpu->gui);
     
     cpu->runningProcess->nextStep = cpu->ip;
     Scheduler_handleSystemRequest(cpu->scheduler);

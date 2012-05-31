@@ -97,12 +97,10 @@ void loadNextProcess(Scheduler *scheduler) {
     SchedSimGUI_printLogMessage((SchedSimGUI *)scheduler->cpu->gui, LOG_TYPE_PROC, nextProcess->pid, "switched to running");
     switch (nextProcess->waitingOn) {
         case PCB_WAITING_ON_SHARED_MEM_READ:
-            scheduler->cpu->sharedMemory[nextProcess->mem_ref]->owner = nextProcess;
             Scheduler_unblockProcessWaitingOnSharedMemery(scheduler, nextProcess->mem_ref);
             break;
             
         case PCB_WAITING_ON_SHARED_MEM_WRITE:
-            scheduler->cpu->sharedMemory[nextProcess->mem_ref]->owner = nextProcess;
             Scheduler_unblockProcessWaitingOnSharedMemery(scheduler, nextProcess->mem_ref);
             break;
             

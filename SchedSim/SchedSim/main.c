@@ -21,6 +21,10 @@
 #define IO_COUNT_ARG        2
 #define PROD_CONS_COUNT_ARG 3
 
+#define PROD_CONS_MIN_STEP_COUNT    2500
+#define PROD_CONS_MAX_STEP_COUNT    5000
+#define PROD_CONS_MAX_REQUEST_COUNT 50
+
 void createIOBoundProcess(CPU *cpu) {
     int stepCount = 1 + (rand() % 5000);
     int ioMaxRequests = 1 + (stepCount / (10 + (rand() % 15)));
@@ -36,9 +40,8 @@ void createIOBoundProcess(CPU *cpu) {
 }
 
 void createProdConsPair(CPU *cpu, int sharedMemIndex) {
-    int prodStepCount = 1 + (rand() % 5000);
-    int prodMaxRequests = 1 + (prodStepCount / (10 + (rand() % 15)));
-    int prodRequestCount = 1 + (rand() % prodMaxRequests);
+    int prodStepCount = PROD_CONS_MIN_STEP_COUNT + (rand() % PROD_CONS_MAX_STEP_COUNT - PROD_CONS_MIN_STEP_COUNT);
+    int prodRequestCount = 1 + (rand() % PROD_CONS_MAX_REQUEST_COUNT);
     RequestType *prodRequests = malloc(sizeof(RequestType) * prodRequestCount);
     int j;
     for (j = 0; j < prodRequestCount; j++) {
@@ -48,9 +51,8 @@ void createProdConsPair(CPU *cpu, int sharedMemIndex) {
     Process *prodProc = Process_init(prodStepCount, prodRequestCount, prodRequests);
     Scheduler_newProcess(cpu->scheduler, prodProc, sharedMemIndex);
     
-    int consStepCount = 1 + (rand() % 5000);
-    int consMaxRequests = 1 + (consStepCount / (10 + (rand() % 15)));
-    int consRequestCount = 1 + (rand() % consMaxRequests);
+    int consStepCount = PROD_CONS_MIN_STEP_COUNT + (rand() % PROD_CONS_MAX_STEP_COUNT - PROD_CONS_MIN_STEP_COUNT);
+    int consRequestCount = 1 + (rand() % PROD_CONS_MAX_REQUEST_COUNT);
     RequestType *consRequests = malloc(sizeof(RequestType) * consRequestCount);
     for (j = 0; j < consRequestCount; j++) {
         RequestType request = {rand() % consRequestCount, SYSTEM_REQUEST_TYPE_READ_SHARED_MEM /*2 + (rand() % 3)*/};

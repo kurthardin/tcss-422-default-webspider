@@ -30,7 +30,7 @@ void * IODevice_run(void *arg) {
     
     IODevice *device = (IODevice *)arg;
     
-    PCB *pcb = PCBQueue_blockingDequeue(device->blockedQueue);
+    PCB *pcb = PCBQueue_blockingPeek(device->blockedQueue);
     
     while (pcb != NULL) { // CAN THIS THREAD BE STOPPED WITH pthread_dettach?
         
@@ -41,12 +41,13 @@ void * IODevice_run(void *arg) {
         srand(time(NULL));
         sleep(rand() % 5);
         
+        pcb = PCBQueue_dequeue(device->blockedQueue);
         CPU_signalInterrupt(device->cpu, Interrupt_init(INTERRUPT_TYPE_IO, pcb));
         
         sprintf(msg, "finished servicing process %d", pcb->pid);
         SchedSimGUI_printLogMessage((SchedSimGUI *) device->cpu->gui, device->type, 0, msg);
         
-        pcb = PCBQueue_blockingDequeue(device->blockedQueue);
+        pcb = PCBQueue_blockingPeek(device->blockedQueue);
         
         if (!CPU_isRunning(device->cpu)) {
             break;

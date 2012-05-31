@@ -29,7 +29,7 @@ void * SysClock_run(void *arg) {
     while (CPU_isRunning(clock->cpu)) {
         CPU_step(clock->cpu);
         SysTimer_increment(clock->timer);
-        usleep(1000);
+        usleep(2500);
     }
     return EXIT_SUCCESS;
 }

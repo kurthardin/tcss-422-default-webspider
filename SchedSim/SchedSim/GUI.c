@@ -146,10 +146,8 @@ SchedSimGUI * SchedSimGUI_init(CPU *cpu) {
 }
 
 void printQueue(WINDOW *window, PCBQueue *queue) {
-    int x = getcurx(window);
-    wmove(window, getcury(window), x);
-    wprintw(window, "                                                ");
-    wmove(window, getcury(window), x);
+    
+    wclrtoeol(window);
     
     LinkedQueueNode *node = queue->head;
     int i;
