@@ -1,3 +1,7 @@
+//  Team: default
+//  Names: Bartholomew, Dan
+//         Choe, Ju
+//         Hardin, Kurt
 //
 //  CPU.c
 //  SchedSim
@@ -16,6 +20,7 @@
 #include "KBDDevice.h"
 #include "GUI.h"
 
+// Initialize an interrupt
 Interrupt * Interrupt_init(int type, PCB *src) {
     Interrupt *interrupt = malloc(sizeof(Interrupt));
     interrupt->type = type;
@@ -27,6 +32,7 @@ Interrupt * Interrupt_init(int type, PCB *src) {
 void checkForInterrupt(CPU *);
 void checkForSystemRequest(CPU *, int);
 
+// Initialize the CPU
 CPU * CPU_init(int sharedMemCount) {
     CPU *cpu = malloc(sizeof(CPU));
     cpu->isRunning = YES;
@@ -54,9 +60,11 @@ CPU * CPU_init(int sharedMemCount) {
     return cpu;
 }
 
+
 void CPU_signalInterrupt(CPU *cpu, Interrupt *interrupt) {
     LinkedBlockingQueue_enqueue(cpu->interruptQueues[interrupt->type], interrupt);
 }
+
 
 void CPU_step(CPU *cpu) {
     

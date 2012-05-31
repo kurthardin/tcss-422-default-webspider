@@ -1,3 +1,7 @@
+//  Team: default
+//  Names: Bartholomew, Dan
+//         Choe, Ju
+//         Hardin, Kurt
 //
 //  SysClock.h
 //  SchedSim

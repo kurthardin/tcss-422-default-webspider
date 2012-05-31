@@ -1,3 +1,7 @@
+//  Team: default
+//  Names: Bartholomew, Dan
+//         Choe, Ju
+//         Hardin, Kurt
 //
 //  Process.c
 //  SchedSim
@@ -11,6 +15,7 @@
 
 #include "Process.h"
 
+// Initializes a process
 Process * Process_init(int stepCount, int requestCount, RequestType *requests) {
     Process *proc = malloc(sizeof(Process));
     proc->noSteps = stepCount;

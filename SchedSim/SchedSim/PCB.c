@@ -1,3 +1,7 @@
+//  Team: default
+//  Names: Bartholomew, Dan
+//         Choe, Ju
+//         Hardin, Kurt
 //
 //  PCB.c
 //  SchedSim
@@ -11,6 +15,7 @@
 
 #include "PCB.h"
 
+// Initializes a PCB
 PCB * PCB_init(int pid, Process *proc) {
     PCB *pcb = malloc(sizeof(PCB));
     pcb->pid = pid;

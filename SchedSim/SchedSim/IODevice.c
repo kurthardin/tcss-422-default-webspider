@@ -1,3 +1,7 @@
+//  Team: default
+//  Names: Bartholomew, Dan
+//         Choe, Ju
+//         Hardin, Kurt
 //
 //  IODevice.c
 //  SchedSim

@@ -1,3 +1,7 @@
+//  Team: default
+//  Names: Bartholomew, Dan
+//         Choe, Ju
+//         Hardin, Kurt
 //
 //  main.c
 //  SchedSim
@@ -25,6 +29,9 @@
 #define PROD_CONS_MAX_STEP_COUNT    5000
 #define PROD_CONS_MAX_REQUEST_COUNT 50
 
+// creates IO bound processes
+// Random step count range: 1 to 5000
+// Random request count range: some random percentage of the step count 
 void createIOBoundProcess(CPU *cpu) {
     int stepCount = 1 + (rand() % 5000);
     int ioMaxRequests = 1 + (stepCount / (10 + (rand() % 15)));
@@ -39,6 +46,9 @@ void createIOBoundProcess(CPU *cpu) {
     Scheduler_newProcess(cpu->scheduler, ioProc, -1);
 }
 
+// creates pairs of consumer and producer processes
+// Random step count range: 2500 to 5000
+// Random request count range: 1 to 50
 void createProdConsPair(CPU *cpu, int sharedMemIndex) {
     int prodStepCount = PROD_CONS_MIN_STEP_COUNT + (rand() % PROD_CONS_MAX_STEP_COUNT - PROD_CONS_MIN_STEP_COUNT);
     int prodRequestCount = 1 + (rand() % PROD_CONS_MAX_REQUEST_COUNT);
@@ -62,6 +72,7 @@ void createProdConsPair(CPU *cpu, int sharedMemIndex) {
     Scheduler_newProcess(cpu->scheduler, consProc, sharedMemIndex);
 }
 
+// main
 int main(int argc, const char * argv[]) {
     
     int calcProcessCount = 2;
