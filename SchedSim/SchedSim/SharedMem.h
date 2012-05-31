@@ -12,7 +12,7 @@
 #define SHARED_MEM_MODE_READ    1
 #define SHARED_MEM_MODE_WRITE   2
 
-#import <pthread.h>
+#include <pthread.h>
 
 #include "PCB.h"
 #include "PCBQueue.h"

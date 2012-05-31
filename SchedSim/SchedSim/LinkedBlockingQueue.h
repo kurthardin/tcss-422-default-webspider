@@ -6,9 +6,9 @@
 //  Copyright (c) 2012 University of Washington at Tacoma. All rights reserved.
 //
 
-#import <pthread.h>
+#include <pthread.h>
 
-#import "LinkedQueueNode.h"
+#include "LinkedQueueNode.h"
 
 #ifndef SchedSim_LinkedQueue_h
 #define SchedSim_LinkedQueue_h
