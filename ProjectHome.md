@@ -1,0 +1,1 @@
+A generic Web crawler that could be used for a multitude of purposes.
